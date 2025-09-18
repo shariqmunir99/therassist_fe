@@ -27,14 +27,15 @@ const Navbar = () => {
   return (
     <header className="navbar">
       {/* Mobile Only */}
-      <div className="min-md:hidden">
+      <div className="min-md:hidden ">
         <Drawer direction="left">
           <DrawerTrigger className="font-bold">☰</DrawerTrigger>
-          <DrawerContent>
+          <DrawerContent className="min-w-[95vw]">
             <DrawerHeader>
+              <DrawerTitle>
               <Link
                 href=""
-                className="flex cursor-pointer justify-center items-center gap-4 pt-8 max-sm:gap-2 max-sm:flex-1 text-[#0e131b]"
+                className="flex cursor-pointer items-center gap-4 pt-8 max-sm:gap-2 max-sm:flex-1 text-[#0e131b]"
               >
                 <Image
                   src="/icons/logo-1.svg"
@@ -46,8 +47,9 @@ const Navbar = () => {
                   Therassist
                 </h2>
               </Link>
+              </DrawerTitle>
             </DrawerHeader>
-            <ul className="flex flex-col mt-20 h-full items-start">
+            <ul className="flex flex-col h-full items-start">
               {defaultNavItems.map((navItem) => (
                 <NavItem key={navItem.label} navItem={navItem} isMobile />
               ))}
