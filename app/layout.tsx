@@ -3,6 +3,12 @@ import { Geist, Geist_Mono, Inter, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CustomSidebar from "@/components/CustomSidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
@@ -26,11 +32,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable}  ${inter.variable} antialiased`}>
+      <body className={`${inter.variable} ${inter.variable} antialiased`}>
         {/*TODO: Add props to navbar (maybe) for checking which version of navbar (authenticated or default) to show. */}
         <Navbar />
-        {children}
-        <Footer />
+        <div className="relative">
+          <SidebarProvider>
+            <CustomSidebar />
+            <SidebarInset>
+              <SidebarTrigger />
+              <main>{children}</main>
+            </SidebarInset>
+          </SidebarProvider>
+          <Footer />
+        </div>
       </body>
     </html>
   );

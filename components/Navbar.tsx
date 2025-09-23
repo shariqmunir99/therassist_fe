@@ -28,9 +28,9 @@ const Navbar = () => {
     <header className="navbar">
       {/* Mobile Only */}
       <div className="min-md:hidden ">
-        <Drawer direction="left">
+        <Drawer direction="left" dismissible={true}>
           <DrawerTrigger className="font-bold">☰</DrawerTrigger>
-          <DrawerContent className="min-w-[95vw]">
+          <DrawerContent className="min-w-[90vw]">
             <DrawerHeader>
               <DrawerTitle>
               <Link

@@ -129,5 +129,5 @@
   .navbar{
     @apply flex items-center justify-between whitespace-nowrap border-b border-solid border-b-border px-10 py-3 max-sm:px-5
   }
-  
+
 }
