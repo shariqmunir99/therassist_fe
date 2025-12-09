@@ -3,11 +3,11 @@ export const APP_CONFIG = {
   description: 'AI-powered therapy session management platform',
   version: '1.0.0',
   author: 'Therassist Team',
-  url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  url: process.env.API_URL || 'http://localhost:3000',
 } as const;
 
 export const API_CONFIG = {
-  baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  baseUrl: process.env.API_URL || 'http://localhost:3001',
   timeout: 30000, // 30 seconds
   retries: 3,
 } as const;

@@ -1,7 +1,7 @@
 export const APP_NAME = 'Therassist';
 export const APP_DESCRIPTION = 'AI-powered therapy session management platform';
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+export const API_BASE_URL = process.env.API_URL || 'http://localhost:3001';
 
 export const ROLES = {
   THERAPIST: 'therapist',

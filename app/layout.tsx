@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Inter, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { ReactQueryProvider } from "@/lib/providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
@@ -26,11 +28,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className={`${inter.variable}  ${inter.variable} antialiased`}>
-        {/*TODO: Add props to navbar (maybe) for checking which version of navbar (authenticated or default) to show. */}
-        <Navbar />
-        {children}
-        <Footer />
+        <ReactQueryProvider>
+          {/*TODO: Add props to navbar (maybe) for checking which version of navbar (authenticated or default) to show. */}
+          <Navbar />
+          {children}
+          <Footer />
+          <Toaster />
+        </ReactQueryProvider>
       </body>
     </html>
   );

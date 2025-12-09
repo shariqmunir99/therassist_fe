@@ -98,7 +98,7 @@ npm install axios @tanstack/react-query next-auth jose zod
 ### Environment Variables
 Create a `.env.local` file:
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:8000
+API_URL=http://localhost:8000
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your-secret-key-here
 ```

@@ -88,7 +88,7 @@ cp .env.example .env.local
 
 Edit `.env.local`:
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:8000
+API_URL=http://localhost:8000
 NEXTAUTH_SECRET=generate-a-secret-here
 ```
 

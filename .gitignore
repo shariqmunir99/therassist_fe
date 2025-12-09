@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Designs folder
 /html_designs
+
+# Copilot instructions
+.github/instructions/Therassist_fe_instructions.instructions.md
