@@ -1,0 +1,29 @@
+import { z } from 'zod';
+
+const envSchema = z.object({
+  NEXT_PUBLIC_API_URL: z.string().url().optional(),
+  NEXTAUTH_URL: z.string().url().optional(),
+  NEXTAUTH_SECRET: z.string().min(1),
+  DATABASE_URL: z.string().url().optional(),
+});
+
+export function validateEnv() {
+  try {
+    return envSchema.parse({
+      NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+      NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+      DATABASE_URL: process.env.DATABASE_URL,
+    });
+  } catch (error) {
+    console.error('Environment validation failed:', error);
+    throw new Error('Invalid environment variables');
+  }
+}
+
+export const env = {
+  apiUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  nextAuthUrl: process.env.NEXTAUTH_URL || 'http://localhost:3000',
+  nextAuthSecret: process.env.NEXTAUTH_SECRET,
+  databaseUrl: process.env.DATABASE_URL,
+};
