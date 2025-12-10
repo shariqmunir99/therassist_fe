@@ -15,8 +15,9 @@ export type UserType = 'Therapist' | 'Client';
 export interface AuthUser {
   id: string;
   email: string;
-  access_token: string;
-  refresh_token: string;
+  accessToken: string;
+  refreshToken: string;
+  needsEmailVerification?: boolean;
 }
 
 /**
@@ -41,11 +42,10 @@ export interface LoginRequest {
  * Therapist signup request payload
  */
 export interface SignupRequest {
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
-  userType: UserType;
 }
 
 /**

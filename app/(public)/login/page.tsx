@@ -35,8 +35,10 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors },
     watch,
+    trigger,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+    mode: "onTouched",
     defaultValues: {
       email: "",
       password: "",
@@ -47,6 +49,13 @@ export default function LoginPage() {
   const userType = watch("userType");
 
   const onSubmit = async (data: LoginFormValues) => {
+    // Trigger validation for all fields
+    const isValid = await trigger();
+
+    if (!isValid) {
+      return;
+    }
+
     if (data.userType === "Therapist") {
       // Therapist login with email and password
       loginTherapist.mutate({
@@ -150,7 +159,7 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={loginTherapist.isPending || sendClientOTP.isPending}
-              className="flex items-center justify-center w-full h-12 md:h-14 rounded-xl bg-[#005A9C] text-white text-base font-bold leading-normal shadow-sm hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center w-full h-12 md:h-14 rounded-xl bg-[#005A9C] cursor-pointer text-white text-base font-bold leading-normal shadow-sm hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loginTherapist.isPending || sendClientOTP.isPending
                 ? "Loading..."
@@ -159,23 +168,9 @@ export default function LoginPage() {
                 : "Log In"}
             </Button>
 
-            {loginTherapist.isError && (
-              <p className="text-sm text-red-600 text-center">
-                {loginTherapist.error.message ||
-                  "Login failed. Please try again."}
-              </p>
-            )}
-
             {sendClientOTP.isSuccess && (
               <p className="text-sm text-green-600 text-center">
                 OTP sent to your email. Please check your inbox.
-              </p>
-            )}
-
-            {sendClientOTP.isError && (
-              <p className="text-sm text-red-600 text-center">
-                {sendClientOTP.error.message ||
-                  "Failed to send OTP. Please try again."}
               </p>
             )}
 
@@ -183,7 +178,7 @@ export default function LoginPage() {
               <p className="text-center text-sm text-[#8E8E93] mt-6 md:mt-8">
                 Don't have an account?{" "}
                 <Link
-                  href="/login"
+                  href="/signup"
                   className="text-[#005A9C] font-medium hover:underline"
                 >
                   Create a new one

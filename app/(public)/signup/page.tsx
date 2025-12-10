@@ -1,52 +1,51 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import Link from "next/link";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldLabel,
   FieldError,
   FieldGroup,
-} from '@/components/ui/field';
-import { Logo } from '@/modules/shared/components/Logo';
-import { UserTypeToggle } from '@/modules/shared/components/ui/UserTypeToggle';
-import { FormInput } from '@/modules/shared/components/ui/FormInput';
-import { SocialButton } from '@/modules/shared/components/ui/SocialButton';
-import { useAuth } from '@/hooks/useAuth';
+} from "@/components/ui/field";
+import { Logo } from "@/modules/shared/components/Logo";
+import { UserTypeToggle } from "@/modules/shared/components/ui/UserTypeToggle";
+import { FormInput } from "@/modules/shared/components/ui/FormInput";
+import { SocialButton } from "@/modules/shared/components/ui/SocialButton";
+import { useAuth } from "@/hooks/useAuth";
 
 const signupSchema = z
   .object({
     firstName: z
       .string()
-      .min(2, { message: 'First name must be at least 2 characters' })
-      .max(50, { message: 'First name must be less than 50 characters' })
-      .regex(/^[^0-9]*$/, { message: 'First name cannot contain numbers' }),
+      .min(2, { message: "First name must be at least 2 characters" })
+      .max(50, { message: "First name must be less than 50 characters" })
+      .regex(/^[^0-9]*$/, { message: "First name cannot contain numbers" }),
     lastName: z
       .string()
-      .min(2, { message: 'Last name must be at least 2 characters' })
-      .max(50, { message: 'Last name must be less than 50 characters' })
-      .regex(/^[^0-9]*$/, { message: 'Last name cannot contain numbers' }),
-    email: z.string().email({ message: 'Please enter a valid email address' }),
+      .min(2, { message: "Last name must be at least 2 characters" })
+      .max(50, { message: "Last name must be less than 50 characters" })
+      .regex(/^[^0-9]*$/, { message: "Last name cannot contain numbers" }),
+    email: z.string().email({ message: "Please enter a valid email address" }),
     password: z
       .string()
-      .min(8, { message: 'Password must be at least 8 characters' })
+      .min(8, { message: "Password must be at least 8 characters" })
       .regex(/[A-Z]/, {
-        message: 'Password must contain at least one uppercase letter',
+        message: "Password must contain at least one uppercase letter",
       })
       .regex(/[a-z]/, {
-        message: 'Password must contain at least one lowercase letter',
+        message: "Password must contain at least one lowercase letter",
       })
-      .regex(/[0-9]/, { message: 'Password must contain at least one number' }),
+      .regex(/[0-9]/, { message: "Password must contain at least one number" }),
     confirmPassword: z.string(),
-    userType: z.enum(['Therapist', 'Client']),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
-    path: ['confirmPassword'],
+    path: ["confirmPassword"],
   });
 
 type SignupFormValues = z.infer<typeof signupSchema>;
@@ -60,25 +59,32 @@ export default function SignupPage() {
     control,
     handleSubmit,
     formState: { errors },
+    trigger,
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
+    mode: "onTouched",
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      userType: 'Therapist',
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
   const onSubmit = async (data: SignupFormValues) => {
+    // Trigger validation for all fields
+    const isValid = await trigger();
+
+    if (!isValid) {
+      return;
+    }
+
     signupTherapist.mutate({
-      firstName: data.firstName,
-      lastName: data.lastName,
+      first_name: data.firstName,
+      last_name: data.lastName,
       email: data.email,
       password: data.password,
-      userType: data.userType,
     });
   };
 
@@ -98,14 +104,6 @@ export default function SignupPage() {
           onSubmit={handleSubmit(onSubmit)}
           className="w-full max-w-md md:max-w-2xl shadow-lg rounded-2xl bg-white p-4 md:p-6"
         >
-          <Controller
-            control={control}
-            name="userType"
-            render={({ field }) => (
-              <UserTypeToggle value={field.value} onChange={field.onChange} className='max-w-full' />
-            )}
-          />
-
           <FieldGroup className="w-full px-4 py-2 md:py-3">
             <div className="flex flex-col md:flex-row md:gap-4">
               <Field className="flex-1">
@@ -173,9 +171,9 @@ export default function SignupPage() {
                 name="password"
                 render={({ field }) => (
                   <FormInput
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     leftIcon="lock"
-                    rightIcon={showPassword ? 'visibility_off' : 'visibility'}
+                    rightIcon={showPassword ? "visibility_off" : "visibility"}
                     onRightIconClick={() => setShowPassword(!showPassword)}
                     placeholder="Enter your password"
                     {...field}
@@ -194,10 +192,10 @@ export default function SignupPage() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormInput
-                    type={showConfirmPassword ? 'text' : 'password'}
+                    type={showConfirmPassword ? "text" : "password"}
                     leftIcon="lock"
                     rightIcon={
-                      showConfirmPassword ? 'visibility_off' : 'visibility'
+                      showConfirmPassword ? "visibility_off" : "visibility"
                     }
                     onRightIconClick={() =>
                       setShowConfirmPassword(!showConfirmPassword)
@@ -215,16 +213,12 @@ export default function SignupPage() {
             <Button
               type="submit"
               disabled={signupTherapist.isPending}
-              className="flex items-center justify-center w-full h-12 md:h-14 rounded-xl bg-[#005A9C] text-white text-base font-bold leading-normal shadow-sm hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center cursor-pointer w-full h-12 md:h-14 rounded-xl bg-[#005A9C] text-white text-base font-bold leading-normal shadow-sm hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {signupTherapist.isPending ? 'Creating Account...' : 'Create Account'}
+              {signupTherapist.isPending
+                ? "Creating Account..."
+                : "Create Account"}
             </Button>
-
-            {signupTherapist.isError && (
-              <p className="text-sm text-red-600 text-center">
-                {signupTherapist.error.message || 'Signup failed. Please try again.'}
-              </p>
-            )}
           </div>
         </form>
 
@@ -239,7 +233,7 @@ export default function SignupPage() {
         </div>
 
         <p className="text-center text-sm text-[#8E8E93] mt-6 md:mt-8">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link
             href="/login"
             className="text-[#005A9C] font-medium hover:underline"

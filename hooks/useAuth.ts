@@ -22,11 +22,18 @@ import { AxiosError } from "axios";
 import { toast } from "sonner";
 
 /**
- * Store authentication tokens in localStorage
+ * Store authentication tokens and user data in localStorage
  */
-const storeTokens = (accessToken: string, refreshToken: string) => {
+const storeTokens = (
+  accessToken: string,
+  refreshToken: string,
+  userId?: string
+) => {
   localStorage.setItem("access_token", accessToken);
   localStorage.setItem("refresh_token", refreshToken);
+  if (userId) {
+    localStorage.setItem("user_id", userId);
+  }
 };
 
 /**
@@ -41,6 +48,13 @@ export const getAccessToken = (): string | null => {
  */
 export const getRefreshToken = (): string | null => {
   return localStorage.getItem("refresh_token");
+};
+
+/**
+ * Get stored user ID
+ */
+export const getUserId = (): string | null => {
+  return localStorage.getItem("user_id");
 };
 
 /**
@@ -61,21 +75,29 @@ export const useAuth = () => {
    */
   const loginTherapistMutation = useMutation<
     AuthResponse,
-    AxiosError,
+    AxiosError<AuthResponse>,
     LoginRequest
   >({
     mutationFn: authApi.loginTherapist,
     onSuccess: (response) => {
       if (response.data) {
         toast.success("Login successful!");
-        storeTokens(response.data.access_token, response.data.refresh_token);
+        storeTokens(
+          response.data.accessToken,
+          response.data.refreshToken,
+          response.data.id
+        );
         router.push("/dashboard/therapists/clients");
       }
     },
     onError: (error) => {
-      if (error.status === 401) {
-        toast.error("Invalid email or password. Please try again.");
-      }
+      const errorMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        (error.status === 401
+          ? "Invalid email or password. Please try again."
+          : "Login failed. Please try again.");
+      toast.error(errorMessage);
     },
   });
 
@@ -98,7 +120,11 @@ export const useAuth = () => {
     mutationFn: authApi.verifyClientOTP,
     onSuccess: (response) => {
       if (response.data) {
-        storeTokens(response.data.access_token, response.data.refresh_token);
+        storeTokens(
+          response.data.accessToken,
+          response.data.refreshToken,
+          response.data.id
+        );
         router.push("/dashboard/clients");
       }
     },
@@ -109,20 +135,28 @@ export const useAuth = () => {
    */
   const signupTherapistMutation = useMutation<
     AuthResponse,
-    Error,
+    AxiosError<AuthResponse>,
     SignupRequest
   >({
     mutationFn: authApi.signupTherapist,
     onSuccess: (response) => {
       if (response.data) {
         toast.success("Signup successful! You are now logged in.");
-        storeTokens(response.data.access_token, response.data.refresh_token);
+        storeTokens(
+          response.data.accessToken,
+          response.data.refreshToken,
+          response.data.id
+        );
         router.push("/dashboard/therapists/clients");
       }
     },
     onError: (error) => {
-      console.log("Shariq Munir");
-      toast.error("Signup failed. Please try again.");
+      const errorMessage =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        "Signup failed. Please try again.";
+      toast.error(errorMessage);
     },
   });
 
@@ -148,5 +182,6 @@ export const useAuth = () => {
     isAuthenticated,
     getAccessToken,
     getRefreshToken,
+    getUserId,
   };
 };

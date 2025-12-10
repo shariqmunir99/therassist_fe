@@ -1,11 +1,11 @@
 /**
  * Authentication API Service
- * 
+ *
  * Axios-based API calls for Supabase authentication
  * These functions are wrapped by React Query mutations in useAuth hook
  */
 
-import axios from '@/lib/axios';
+import axios from "@/lib/axios";
 import type {
   LoginRequest,
   SignupRequest,
@@ -13,10 +13,9 @@ import type {
   OTPVerifyRequest,
   AuthResponse,
   OTPResponse,
-} from './types';
+} from "./types";
 
-
-const THERAPIST_LOGIN_API_URL = '/auth/login';
+const THERAPIST_LOGIN_API_URL = "/auth/login";
 
 /**
  * Login therapist with email and password
@@ -38,7 +37,7 @@ export const sendClientOTP = async (
   request: OTPRequest
 ): Promise<OTPResponse> => {
   const response = await axios.post<OTPResponse>(
-    '/auth/client/send-otp',
+    "/auth/client/send-otp",
     request
   );
   return response.data;
@@ -51,7 +50,7 @@ export const verifyClientOTP = async (
   request: OTPVerifyRequest
 ): Promise<AuthResponse> => {
   const response = await axios.post<AuthResponse>(
-    '/auth/client/verify-otp',
+    "/auth/client/verify-otp",
     request
   );
   return response.data;
@@ -63,10 +62,7 @@ export const verifyClientOTP = async (
 export const signupTherapist = async (
   data: SignupRequest
 ): Promise<AuthResponse> => {
-  const response = await axios.post<AuthResponse>(
-    '/auth/therapist/signup',
-    data
-  );
+  const response = await axios.post<AuthResponse>("/auth/signup", data);
   return response.data;
 };
 
@@ -75,14 +71,15 @@ export const signupTherapist = async (
  */
 export const logout = async (): Promise<void> => {
   // Clear tokens from localStorage
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('refresh_token');
-  
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("user_id");
+
   // Optionally call backend logout endpoint to invalidate tokens
   try {
-    await axios.post('/auth/logout');
+    await axios.post("/auth/logout");
   } catch (error) {
     // Ignore errors on logout
-    console.warn('Logout request failed:', error);
+    console.warn("Logout request failed:", error);
   }
 };
