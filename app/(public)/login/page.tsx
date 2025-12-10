@@ -71,8 +71,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative flex h-auto min-h-screen w-full flex-col bg-white">
-      <div className="flex flex-col items-center justify-start p-6 pt-8 md:pt-12">
+    <div className="flex flex-row items-center justify-between p-6 pt-8 md:pt-12">
+      <div className="flex flex-col items-center w-full mb-6 md:mb-8 h-auto">
         <Logo className="mb-3 md:mb-4" />
 
         <h1 className="text-[#1D1D1F] tracking-tight text-[28px] md:text-[32px] font-bold leading-tight text-center pb-2 pt-3 md:pt-4">
@@ -81,128 +81,125 @@ export default function LoginPage() {
         <p className="text-[#8E8E93] text-base font-normal leading-normal pb-6 md:pb-8 text-center">
           Your Partner in Mental Wellness.
         </p>
+      </div>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-md md:max-w-2xl shadow-lg rounded-2xl bg-white p-4 md:p-6"
+      >
+        <Controller
+          control={control}
+          name="userType"
+          render={({ field }) => (
+            <UserTypeToggle
+              value={field.value}
+              onChange={field.onChange}
+              className="max-w-full"
+            />
+          )}
+        />
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="w-full max-w-md md:max-w-2xl shadow-lg rounded-2xl bg-white p-4 md:p-6"
-        >
-          <Controller
-            control={control}
-            name="userType"
-            render={({ field }) => (
-              <UserTypeToggle
-                value={field.value}
-                onChange={field.onChange}
-                className="max-w-full"
-              />
-            )}
-          />
+        <FieldGroup className="w-full px-4 py-2 md:py-3">
+          <Field>
+            <FieldLabel className="text-[#1D1D1F] text-base font-medium leading-normal">
+              Email
+            </FieldLabel>
+            <Controller
+              control={control}
+              name="email"
+              render={({ field }) => (
+                <FormInput
+                  type="email"
+                  leftIcon="mail"
+                  placeholder="Enter your email"
+                  {...field}
+                />
+              )}
+            />
+            <FieldError errors={[errors.email]} />
+          </Field>
 
-          <FieldGroup className="w-full px-4 py-2 md:py-3">
-            <Field>
-              <FieldLabel className="text-[#1D1D1F] text-base font-medium leading-normal">
-                Email
-              </FieldLabel>
-              <Controller
-                control={control}
-                name="email"
-                render={({ field }) => (
-                  <FormInput
-                    type="email"
-                    leftIcon="mail"
-                    placeholder="Enter your email"
-                    {...field}
-                  />
-                )}
-              />
-              <FieldError errors={[errors.email]} />
-            </Field>
-
-            {userType === "Therapist" && (
-              <>
-                <Field>
-                  <FieldLabel className="text-[#1D1D1F] text-base font-medium leading-normal">
-                    Password
-                  </FieldLabel>
-                  <Controller
-                    control={control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormInput
-                        type={showPassword ? "text" : "password"}
-                        leftIcon="lock"
-                        rightIcon={
-                          showPassword ? "visibility_off" : "visibility"
-                        }
-                        onRightIconClick={() => setShowPassword(!showPassword)}
-                        placeholder="Enter your password"
-                        {...field}
-                      />
-                    )}
-                  />
-                  <FieldError errors={[errors.password]} />
-                </Field>
-
-                <div className="flex justify-end -mt-2">
-                  <Link
-                    href="/forgot-password"
-                    className="text-[#005A9C] text-sm font-medium hover:underline"
-                  >
-                    Forgot Password?
-                  </Link>
-                </div>
-              </>
-            )}
-          </FieldGroup>
-
-          <div className="w-full px-4 pt-4 md:pt-6 space-y-3 md:space-y-4">
-            <Button
-              type="submit"
-              disabled={loginTherapist.isPending || sendClientOTP.isPending}
-              className="flex items-center justify-center w-full h-12 md:h-14 rounded-xl bg-[#005A9C] cursor-pointer text-white text-base font-bold leading-normal shadow-sm hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loginTherapist.isPending || sendClientOTP.isPending
-                ? "Loading..."
-                : userType === "Client"
-                ? "Continue"
-                : "Log In"}
-            </Button>
-
-            {sendClientOTP.isSuccess && (
-              <p className="text-sm text-green-600 text-center">
-                OTP sent to your email. Please check your inbox.
-              </p>
-            )}
-
-            {userType === "Therapist" && (
-              <p className="text-center text-sm text-[#8E8E93] mt-6 md:mt-8">
-                Don't have an account?{" "}
-                <Link
-                  href="/signup"
-                  className="text-[#005A9C] font-medium hover:underline"
-                >
-                  Create a new one
-                </Link>
-              </p>
-            )}
-          </div>
           {userType === "Therapist" && (
             <>
-              <div className="flex items-center w-full max-w-md md:max-w-2xl px-4 py-6 md:py-8">
-                <div className="flex-grow h-px bg-gray-200"></div>
-                <span className="px-4 text-sm text-[#8E8E93]">or</span>
-                <div className="flex-grow h-px bg-gray-200"></div>
-              </div>
+              <Field>
+                <FieldLabel className="text-[#1D1D1F] text-base font-medium leading-normal">
+                  Password
+                </FieldLabel>
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormInput
+                      type={showPassword ? "text" : "password"}
+                      leftIcon="lock"
+                      rightIcon={showPassword ? "visibility_off" : "visibility"}
+                      onRightIconClick={() => setShowPassword(!showPassword)}
+                      placeholder="Enter your password"
+                      {...field}
+                    />
+                  )}
+                />
+                <FieldError errors={[errors.password]} />
+              </Field>
 
-              <div className="w-full max-w-md md:max-w-2xl px-4 space-y-3 md:space-y-4">
-                <SocialButton provider="google">
-                  Continue with Google
-                </SocialButton>
+              <div className="flex justify-end -mt-2">
+                <Link
+                  href="/forgot-password"
+                  className="text-[#005A9C] text-sm font-medium hover:underline"
+                >
+                  Forgot Password?
+                </Link>
               </div>
             </>
           )}
-        </form>
-      </div>
+        </FieldGroup>
+
+        <div className="w-full px-4 pt-4 md:pt-6 space-y-3 md:space-y-4">
+          <Button
+            type="submit"
+            disabled={loginTherapist.isPending || sendClientOTP.isPending}
+            className="flex items-center justify-center w-full h-12 md:h-14 rounded-xl bg-[#005A9C] cursor-pointer text-white text-base font-bold leading-normal shadow-sm hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loginTherapist.isPending || sendClientOTP.isPending
+              ? "Loading..."
+              : userType === "Client"
+              ? "Continue"
+              : "Log In"}
+          </Button>
+
+          {sendClientOTP.isSuccess && (
+            <p className="text-sm text-green-600 text-center">
+              OTP sent to your email. Please check your inbox.
+            </p>
+          )}
+
+          {userType === "Therapist" && (
+            <p className="text-center text-sm text-[#8E8E93] mt-6 md:mt-8">
+              Don't have an account?{" "}
+              <Link
+                href="/signup"
+                className="text-[#005A9C] font-medium hover:underline"
+              >
+                Create a new one
+              </Link>
+            </p>
+          )}
+        </div>
+        {userType === "Therapist" && (
+          <>
+            <div className="flex items-center w-full max-w-md md:max-w-2xl px-4 py-6 md:py-8">
+              <div className="flex-grow h-px bg-gray-200"></div>
+              <span className="px-4 text-sm text-[#8E8E93]">or</span>
+              <div className="flex-grow h-px bg-gray-200"></div>
+            </div>
+
+            <div className="w-full max-w-md md:max-w-2xl px-4 space-y-3 md:space-y-4">
+              <SocialButton provider="google">
+                Continue with Google
+              </SocialButton>
+            </div>
+          </>
+        )}
+      </form>
     </div>
   );
 }

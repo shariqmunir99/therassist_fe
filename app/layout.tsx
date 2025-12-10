@@ -42,7 +42,9 @@ export default function RootLayout({
         <ReactQueryProvider>
           {/*TODO: Add props to navbar (maybe) for checking which version of navbar (authenticated or default) to show. */}
           <Navbar />
-          {children}
+          <div className="relative flex h-auto min-h-screen w-full flex-col bg-white">
+            {children}
+          </div>
           <Footer />
           <Toaster />
         </ReactQueryProvider>
