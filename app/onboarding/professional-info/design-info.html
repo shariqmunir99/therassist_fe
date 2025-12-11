@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Professional Info Step</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": {
+                          DEFAULT: "#2563eb", // blue-600
+                          hover: "#1d4ed8" // blue-700
+                        },
+                        "background": "#ffffff",
+                        "surface": "#ffffff",
+                        "border-light": "#e5e7eb", // gray-200
+                        "text-primary": "#111827", // gray-900
+                        "text-secondary": "#6b7280" // gray-500
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem", 
+                        "lg": "2rem", 
+                        "xl": "3rem", 
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background font-display min-h-screen flex flex-col items-center justify-center p-4">
+<div class="w-full max-w-[640px] flex flex-col gap-8">
+<div class="flex flex-col gap-3">
+<div class="flex gap-6 justify-between items-center">
+<p class="text-text-primary text-base font-medium leading-normal">Step 2 of 4</p>
+<p class="text-text-secondary text-sm font-normal">50% completed</p>
+</div>
+<div class="h-2 w-full rounded-full bg-gray-200 overflow-hidden">
+<div class="h-full rounded-full bg-primary transition-all duration-500 ease-out" style="width: 50%;"></div>
+</div>
+</div>
+<div class="w-full bg-surface rounded-lg p-8 sm:p-10 shadow-xl border border-gray-100">
+<div class="mb-10 flex flex-col gap-2">
+<h1 class="text-3xl sm:text-[32px] font-bold text-text-primary leading-tight tracking-tight">
+                    Tell us about your work
+                </h1>
+<p class="text-text-secondary text-base font-normal leading-relaxed">
+                    Help us tailor your experience by sharing your professional background and expertise.
+                </p>
+</div>
+<form class="flex flex-col gap-6" onsubmit="event.preventDefault();">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<label class="flex flex-col gap-2 group">
+<span class="text-text-primary text-sm font-medium pl-1">Years of Experience</span>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+<span class="material-symbols-outlined" style="font-size: 20px;">work_history</span>
+</span>
+<input class="w-full h-14 bg-gray-50 text-text-primary border border-gray-200 rounded-full pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-gray-400" min="0" placeholder="e.g. 5" type="number"/>
+</div>
+</label>
+<label class="flex flex-col gap-2 group">
+<span class="text-text-primary text-sm font-medium pl-1">Highest Education</span>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+<span class="material-symbols-outlined" style="font-size: 20px;">school</span>
+</span>
+<input class="w-full h-14 bg-gray-50 text-text-primary border border-gray-200 rounded-full pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-gray-400" placeholder="University or Certification" type="text"/>
+</div>
+</label>
+</div>
+<label class="flex flex-col gap-2">
+<span class="text-text-primary text-sm font-medium pl-1">Specializations</span>
+<div class="w-full min-h-[56px] bg-gray-50 border border-gray-200 rounded-3xl p-2 flex flex-wrap items-center gap-2 focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent transition-all">
+<div class="flex items-center gap-1 bg-blue-100 text-primary px-3 py-1.5 rounded-full border border-blue-200">
+<span class="text-sm font-medium">UI Design</span>
+<button class="text-primary hover:text-white rounded-full p-0.5 hover:bg-primary/80 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 14px;">close</span>
+</button>
+</div>
+<div class="flex items-center gap-1 bg-blue-100 text-primary px-3 py-1.5 rounded-full border border-blue-200">
+<span class="text-sm font-medium">Product Strategy</span>
+<button class="text-primary hover:text-white rounded-full p-0.5 hover:bg-primary/80 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 14px;">close</span>
+</button>
+</div>
+<input class="flex-1 bg-transparent border-none text-text-primary placeholder:text-gray-400 focus:ring-0 min-w-[120px] h-10 px-2" placeholder="Add skills..." type="text"/>
+<span class="material-symbols-outlined text-gray-400 pr-2" style="font-size: 20px;">add_circle</span>
+</div>
+</label>
+<label class="flex flex-col gap-2">
+<span class="text-text-primary text-sm font-medium pl-1">Short Bio</span>
+<textarea class="w-full bg-gray-50 text-text-primary border border-gray-200 rounded-3xl p-4 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-gray-400 resize-none h-32" placeholder="Write a few sentences about your professional journey..."></textarea>
+</label>
+<div class="flex items-center justify-between pt-6 mt-2 border-t border-gray-100">
+<button class="group flex items-center gap-2 px-6 h-12 rounded-full text-text-secondary hover:bg-gray-100 hover:text-text-primary transition-all font-medium" type="button">
+<span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform" style="font-size: 20px;">arrow_back</span>
+                        Back
+                    </button>
+<button class="group flex items-center gap-2 px-8 h-12 bg-primary hover:bg-primary-hover text-white rounded-full font-bold transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40" type="button">
+                        Next Step
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" style="font-size: 20px;">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</body></html>

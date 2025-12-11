@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Availability Calendar Step</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class", // Although we are building a light theme, keeping this allows for future dark mode implementation.
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2563eb", // A strong blue for primary actions
+                        "primary-light": "#dbeafe", // A very light blue for backgrounds and accents
+                        "primary-medium": "#60a5fa", // A medium blue for highlights
+                        "background-light": "#ffffff",
+                        "surface": "#f8fafc", // Slightly off-white for cards
+                        "surface-border": "#e2e8f0", // Light gray for borders
+                        "text-primary": "#1e293b", // Dark slate for main text
+                        "text-secondary": "#64748b", // Lighter slate for secondary text
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.75rem", // Slightly reduced for a modern look
+                        "lg": "1.5rem",
+                        "xl": "2.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light font-display text-text-primary overflow-x-hidden antialiased">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <main class="flex-1 flex flex-col items-center py-8 px-4 sm:px-8">
+            <div class="layout-content-container flex flex-col max-w-[1100px] w-full flex-1 gap-8">
+                <div class="flex flex-col gap-6">
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-end">
+                            <p class="text-primary text-sm font-bold uppercase tracking-wider">Step 4 of 4</p>
+                            <span class="text-text-secondary text-xs">85% Completed</span>
+                        </div>
+                        <div class="h-1.5 w-full rounded-full bg-surface-border overflow-hidden">
+                            <div class="h-full bg-primary rounded-full" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap justify-between items-end gap-4">
+                        <div class="flex flex-col gap-2 max-w-2xl">
+                            <h1
+                                class="text-text-primary text-4xl md:text-5xl font-extrabold leading-tight tracking-[-0.02em]">
+                                When are you free?</h1>
+                            <p class="text-text-secondary text-lg font-normal leading-normal">Define your standard
+                                weekly availability. You can override specific dates later.</p>
+                        </div>
+                        <div
+                            class="flex items-center gap-2 bg-surface rounded-full px-4 py-2 border border-surface-border">
+                            <span class="material-symbols-outlined text-text-secondary"
+                                style="font-size: 20px;">public</span>
+                            <select
+                                class="bg-transparent border-none text-sm text-text-primary focus:ring-0 p-0 pr-8 cursor-pointer font-medium">
+                                <option>Pacific Time (US &amp; Canada)</option>
+                                <option>Eastern Time (US &amp; Canada)</option>
+                                <option>London (GMT)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col lg:flex-row gap-6 mt-4">
+                    <div class="lg:w-64 flex flex-col gap-4 shrink-0">
+                        <div class="bg-surface rounded-xl p-5 border border-surface-border flex flex-col gap-4">
+                            <p class="text-text-primary font-bold text-sm">Quick Actions</p>
+                            <button
+                                class="flex w-full cursor-pointer items-center justify-between rounded-lg h-10 px-3 bg-primary-light hover:bg-blue-200 text-primary text-sm font-medium transition-colors group">
+                                <span class="flex items-center gap-2">
+                                    <span
+                                        class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform"
+                                        style="font-size: 18px;">content_copy</span>
+                                    Copy Mon to All
+                                </span>
+                            </button>
+                            <button
+                                class="flex w-full cursor-pointer items-center justify-between rounded-lg h-10 px-3 bg-transparent hover:bg-surface border border-surface-border text-text-secondary hover:text-text-primary text-sm font-medium transition-colors group">
+                                <span class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined transition-colors"
+                                        style="font-size: 18px;">restart_alt</span>
+                                    Reset to 9-5
+                                </span>
+                            </button>
+                        </div>
+                        <div class="bg-surface rounded-xl p-5 border border-surface-border flex flex-col gap-3">
+                            <p class="text-text-primary font-bold text-sm">Legend</p>
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 rounded bg-primary"></div>
+                                <span class="text-text-secondary text-sm">Available</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-4 h-4 rounded bg-slate-100 border border-surface-border"></div>
+                                <span class="text-text-secondary text-sm">Unavailable</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="flex-1 bg-surface rounded-2xl border border-surface-border p-4 md:p-6 overflow-x-auto relative shadow-sm">
+                        <div
+                            class="absolute top-1/2 left-1/2 w-3/4 h-3/4 -translate-x-1/2 -translate-y-1/2 bg-primary/5 blur-3xl pointer-events-none rounded-full">
+                        </div>
+                        <div class="min-w-[700px] relative z-10">
+                            <div class="grid grid-cols-8 gap-2 mb-4">
+                                <div class="text-transparent text-xs font-bold uppercase text-center py-2">Time</div>
+                                <div class="text-text-secondary text-xs font-bold uppercase text-center py-2">Mon</div>
+                                <div class="text-text-secondary text-xs font-bold uppercase text-center py-2">Tue</div>
+                                <div class="text-text-secondary text-xs font-bold uppercase text-center py-2">Wed</div>
+                                <div class="text-text-secondary text-xs font-bold uppercase text-center py-2">Thu</div>
+                                <div class="text-text-secondary text-xs font-bold uppercase text-center py-2">Fri</div>
+                                <div class="text-text-secondary/50 text-xs font-bold uppercase text-center py-2">Sat
+                                </div>
+                                <div class="text-text-secondary/50 text-xs font-bold uppercase text-center py-2">Sun
+                                </div>
+                            </div>
+                            <div class="h-[400px] overflow-y-auto pr-2 no-scrollbar">
+                                <div class="grid grid-cols-8 gap-2">
+                                    <div class="flex flex-col gap-2">
+                                        <div
+                                            class="h-10 flex items-center justify-end text-xs text-text-secondary font-medium">
+                                            08:00</div>
+                                        <div
+                                            class="h-10 flex items-center justify-end text-xs text-text-secondary font-medium">
+                                            09:00</div>
+                                        <div
+                                            class="h-10 flex items-center justify-end text-xs text-text-secondary font-medium">
+                                            10:00</div>
+                                        <div
+                                            class="h-10 flex items-center justify-end text-xs text-text-secondary font-medium">
+                                            11:00</div>
+                                        <div
+                                            class="h-10 flex items-center justify-end text-xs text-text-secondary font-medium">
+                                            12:00</div>
+                                        <div
+                                            class="h-10 flex items-center justify-end text-xs text-text-secondary font-medium">
+                                            13:00</div>
+                                        <div
+                                            class="h-10 flex items-center justify-end text-xs text-text-secondary font-medium">
+                                            14:00</div>
+                                        <div
+                                            class="h-10 flex items-center justify-end text-xs text-text-secondary font-medium">
+                                            15:00</div>
+                                        <div
+                                            class="h-10 flex items-center justify-end text-xs text-text-secondary font-medium">
+                                            16:00</div>
+                                        <div
+                                            class="h-10 flex items-center justify-end text-xs text-text-secondary font-medium">
+                                            17:00</div>
+                                        <div
+                                            class="h-10 flex items-center justify-end text-xs text-text-secondary font-medium">
+                                            18:00</div>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded-t bg-primary border-x border-t border-primary cursor-pointer relative group">
+                                            <div
+                                                class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full hidden group-hover:block">
+                                            </div>
+                                        </div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div
+                                            class="h-10 rounded-b bg-primary border-x border-b border-primary cursor-pointer relative group">
+                                            <div
+                                                class="absolute -bottom-1 -right-1 w-2 h-2 bg-primary rounded-full hidden group-hover:block">
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded-t bg-primary border-x border-t border-primary cursor-pointer">
+                                        </div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div
+                                            class="h-10 rounded-b bg-primary border-x border-b border-primary cursor-pointer">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded-t bg-primary border-x border-t border-primary cursor-pointer">
+                                        </div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div
+                                            class="h-10 rounded-b bg-primary border-x border-b border-primary cursor-pointer">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded-t bg-primary border-x border-t border-primary cursor-pointer">
+                                        </div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div
+                                            class="h-10 rounded-b bg-primary border-x border-b border-primary cursor-pointer">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded-t bg-primary border-x border-t border-primary cursor-pointer">
+                                        </div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div class="h-10 bg-primary/90 border-x border-primary cursor-pointer"></div>
+                                        <div
+                                            class="h-10 rounded-b bg-primary border-x border-b border-primary cursor-pointer">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-2 opacity-50">
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-2 opacity-50">
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                        <div
+                                            class="h-10 rounded bg-slate-100/50 hover:bg-slate-200 cursor-pointer transition-colors border border-transparent hover:border-surface-border">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 mt-8 pb-8 border-t border-surface-border pt-8">
+                    <button
+                        class="w-full sm:w-auto text-text-secondary hover:text-text-primary font-bold text-sm py-3 px-6 rounded-full hover:bg-surface transition-colors">
+                        Back
+                    </button>
+                    <button
+                        class="w-full sm:w-auto shadow-[0_8px_20px_rgba(37,99,235,0.2)] flex min-w-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-primary hover:bg-blue-600 text-white text-base font-extrabold leading-normal tracking-wide transition-all transform hover:scale-105">
+                        <span class="truncate">Finish Setup</span>
+                        <span class="material-symbols-outlined ml-2" style="font-size: 20px;">check_circle</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

@@ -21,7 +21,7 @@ Check if the component already exists in the codebase.
 
 If exists → reuse it. Do not redefine a new component or design.
 
-If no existing component is found → use the shadcn/ui equivalent.
+If no existing component is found → use the shadcn/ui equivalent. Refer to this Link on getting info about existing shadcn/ui components: "https://ui.shadcn.com/docs/components"
 
 If shadcn/ui does not have a suitable component → implement your own minimal custom component.
 
