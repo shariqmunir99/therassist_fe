@@ -59,8 +59,11 @@ export async function getCurrentUser(): Promise<User | null> {
     return {
       id: payload.sub || payload.id || payload.user_id || payload.userId,
       email: payload.email,
-      role:
-        payload.role?.toLowerCase() === "therapist" ? "therapist" : "client",
+      role: payload.role
+        ? payload.role?.toLowerCase() === "therapist"
+          ? "therapist"
+          : "client"
+        : "therapist",
       name:
         payload.first_name && payload.last_name
           ? `${payload.first_name} ${payload.last_name}`

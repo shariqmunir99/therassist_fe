@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Therapist Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "primary": {
+                DEFAULT: "#2563EB", // Blue-600
+                light: "#DBEAFE",   // Blue-100
+              },
+              "background": "#F8FAFC", // slate-50
+              "surface": "#FFFFFF",
+              "copy": "#1E293B", // slate-800
+              "copy-light": "#64748B", // slate-500
+              "border-color": "#E2E8F0", // slate-200
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.75rem", // 12px
+              "lg": "1rem", // 16px
+            },
+            boxShadow: {
+              'soft': '0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+</head>
+<body class="font-display bg-background text-copy">
+<div class="flex min-h-screen">
+<aside class="w-64 flex-shrink-0 bg-surface p-4 flex flex-col justify-between border-r border-border-color">
+<div class="flex flex-col gap-8">
+<div class="flex items-center gap-3 px-2">
+<span class="material-symbols-outlined text-primary text-3xl">spa</span>
+<h1 class="text-copy text-xl font-bold">MindWell</h1>
+</div>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary-light text-primary" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-bold">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-copy-light hover:bg-primary-light hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium">Clients</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-copy-light hover:bg-primary-light hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<p class="text-sm font-medium">Calendar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-copy-light hover:bg-primary-light hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">mail</span>
+<p class="text-sm font-medium">Messages</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-copy-light hover:bg-primary-light hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium">Settings</p>
+</a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="bg-blue-50 p-4 rounded-lg text-center">
+<p class="text-copy text-sm font-medium">Upgrade to Pro</p>
+<p class="text-copy-light text-xs mt-1 mb-3">Unlock all features and enhance your practice.</p>
+<button class="w-full bg-primary text-white text-sm font-bold py-2 rounded-full">Upgrade Now</button>
+</div>
+<div class="flex items-center gap-3 p-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of Dr. Anya Sharma" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAjtc0grRgw1MKL0N1XjYr9FIK01mhqXzyDzCYdVFUoIb4RPJPZdM0-x6ihijTOq9iZaNZ7Oa1IJgu6YC-TGh-2T9I5sJtYun8cYd4Kpg7B0w0YNMRbDweD2OEhIoya7M4ZuVxyWKfJoiJd7W3MsajaPvM6few2MtFEASy3bENFHg-WK9YmhH8EjUXJv1iPkPYh1oHaRq3egRk4tHjo2ACRNHlxY0PHv_Si03ORKtjuoqR7IGLnxx501_u1G8RYGbETwh-l7eA4ZCMY");'></div>
+<div class="flex flex-col">
+<h1 class="text-copy text-sm font-medium leading-tight">Dr. Anya Sharma</h1>
+<p class="text-copy-light text-xs font-normal leading-tight">Clinical Psychologist</p>
+</div>
+<button class="text-copy-light ml-auto hover:text-copy"><span class="material-symbols-outlined">logout</span></button>
+</div>
+</div>
+</aside>
+<main class="flex-1 p-8 overflow-y-auto">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+<div class="flex flex-col">
+<h1 class="text-copy text-4xl font-black leading-tight tracking-[-0.033em]">Dashboard</h1>
+<p class="text-copy-light text-base font-normal leading-normal">Welcome back, Dr. Sharma. Here's what's happening today.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<input class="bg-surface border border-border-color text-copy placeholder-copy-light text-sm rounded-lg py-2 pl-10 pr-4 w-64 focus:ring-primary focus:border-primary" placeholder="Search..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-copy-light">search</span>
+</div>
+<button class="p-2 rounded-lg bg-surface border border-border-color text-copy-light hover:text-copy hover:bg-slate-100">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="flex flex-col gap-2 rounded-lg bg-surface border border-border-color p-6 shadow-soft">
+<p class="text-copy text-base font-medium leading-normal">Today's Sessions</p>
+<p class="text-copy tracking-tight text-4xl font-bold leading-tight">5</p>
+<p class="text-primary text-sm font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-base">arrow_upward</span> <span>1 more than yesterday</span></p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg bg-surface border border-border-color p-6 shadow-soft">
+<p class="text-copy text-base font-medium leading-normal">Unread Messages</p>
+<p class="text-copy tracking-tight text-4xl font-bold leading-tight">8</p>
+<p class="text-primary text-sm font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-base">arrow_upward</span> <span>2 new today</span></p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg bg-surface border border-border-color p-6 shadow-soft">
+<p class="text-copy text-base font-medium leading-normal">Notes to Complete</p>
+<p class="text-copy tracking-tight text-4xl font-bold leading-tight">3</p>
+<p class="text-primary text-sm font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-base">arrow_upward</span> <span>1 new from today</span></p>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-6">
+<div class="col-span-3 lg:col-span-1 flex flex-col gap-6">
+<div class="bg-surface border border-border-color p-6 rounded-lg shadow-soft">
+<h2 class="text-copy text-lg font-bold leading-tight tracking-[-0.015em] mb-4">Upcoming Sessions</h2>
+<div class="grid grid-cols-[auto_1fr] gap-x-4">
+<div class="flex flex-col items-center gap-1 pt-1">
+<div class="p-2 rounded-full bg-primary-light text-primary">
+<span class="material-symbols-outlined text-base">video_call</span>
+</div>
+<div class="w-px bg-border-color h-full"></div>
+</div>
+<div class="flex flex-col pb-6 border-b border-border-color">
+<p class="text-copy text-base font-medium leading-normal">Session with Alex Ray</p>
+<p class="text-copy-light text-sm font-normal leading-normal">10:00 AM - 11:00 AM</p>
+</div>
+<div class="flex flex-col items-center gap-1 pt-1">
+<div class="w-px bg-border-color h-6"></div>
+<div class="p-2 rounded-full bg-slate-100 text-copy-light">
+<span class="material-symbols-outlined text-base">video_call</span>
+</div>
+<div class="w-px bg-border-color h-full"></div>
+</div>
+<div class="flex flex-col py-6 border-b border-border-color">
+<p class="text-copy text-base font-medium leading-normal">Session with Jordan Smith</p>
+<p class="text-copy-light text-sm font-normal leading-normal">11:30 AM - 12:30 PM</p>
+</div>
+<div class="flex flex-col items-center gap-1 pt-1">
+<div class="w-px bg-border-color h-6"></div>
+<div class="p-2 rounded-full bg-slate-100 text-copy-light">
+<span class="material-symbols-outlined text-base">groups</span>
+</div>
+<div class="w-px bg-border-color h-full"></div>
+</div>
+<div class="flex flex-col py-6">
+<p class="text-copy text-base font-medium leading-normal">Team Consultation</p>
+<p class="text-copy-light text-sm font-normal leading-normal">1:00 PM - 1:30 PM</p>
+</div>
+</div>
+</div>
+<div class="bg-surface border border-border-color p-6 rounded-lg shadow-soft">
+<h2 class="text-copy text-lg font-bold leading-tight tracking-[-0.015em] mb-4">Clients Requiring Attention</h2>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of Maya Joshi" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAmp5AC9YxCMPdF_O9nRBabCqcIAX_8tM3VKTVYqCdktdf91IzZRZE2Y26CGhLKCMLsJ9eO0WcTPCBqkw8Dos_PNXKmDreLsNqqJayiu-niVeBbVjIquLnd0BDZWa1PRYtwXyweZ9dWxTRo2oOqT7kDoHUvj4L3hlj5rUqHzNtEf6Ahl8_IhMqKLLD-F4hP6ITdZ6fawRBgHV29nVhBrk2HZ3OxWJ2iP3iaHb5vQ3fs7UmoQW50BF7D_tMWfqsU2xlRj98FAmfjGKNu");'></div>
+<div class="flex-grow">
+<p class="font-medium text-copy">Maya Joshi</p>
+<p class="text-sm text-yellow-500">Flagged Survey Response</p>
+</div>
+<button class="text-copy-light hover:text-copy"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of Ben Carter" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAvqa5oLnabZHQulYJ4noQdgPRTNEwTrTcCncSmi0uspJ1Nt_w99VI21T0jX4_GQ5L1ggAi9p7nNHbVUcfV1UPG58z-dlwYgpm4eu7hfbzdx48cMgnUf5YDFKYdpG0qITsIHPnuW3pKOFfgJr450EbmAc80AJ1vwfxEm7iM4E92OrOWbJKVuQhhw_kVyn7w3zF-KFwpJJt3IuBjsQc7dbtqVcDQmIANRU9yCCg0sE4dCl-M0CAfloaRicEUUEdJx2SOq1UQG_eAFIph");'></div>
+<div class="flex-grow">
+<p class="font-medium text-copy">Ben Carter</p>
+<p class="text-sm text-red-500">Missed Appointment</p>
+</div>
+<button class="text-copy-light hover:text-copy"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of Sarah Chen" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAP7Bm3NZWafiXl8qtdI7s3kaMMogzH2khmrPPeL5oDtSrVYoAEu09bDIh7KdrnYBZKO18WFG-2UeNcDTEJphe8OPRm42cxqnPY-9c3d-wRA7x20e2yBMNjsIOgjRP1FLTGSRQqk47UsbegTV-6GtZj_AN4v_CHSYWtR1w3VsB6Rr7RxWhKAiv9vn0DF8lV_I25abi7ajBz6xiTmmMQXDgBVAsIp6HlURf1pofyw-3w9wU_24z9OypQZbO796NfpY5MizE9vSKaSAO1");'></div>
+<div class="flex-grow">
+<p class="font-medium text-copy">Sarah Chen</p>
+<p class="text-sm text-blue-500">New Message Received</p>
+</div>
+<button class="text-copy-light hover:text-copy"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+</div>
+</div>
+<div class="col-span-3 lg:col-span-2 flex flex-col gap-6">
+<div class="bg-surface border border-border-color rounded-lg shadow-soft overflow-hidden">
+<div class="p-6">
+<h2 class="text-copy text-lg font-bold leading-tight tracking-[-0.015em]">Recent Sessions</h2>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead class="bg-slate-50 text-copy-light uppercase text-xs">
+<tr>
+<th class="px-6 py-3 font-medium">Client</th>
+<th class="px-6 py-3 font-medium">Date</th>
+<th class="px-6 py-3 font-medium">Duration</th>
+<th class="px-6 py-3 font-medium text-center">Note Status</th>
+</tr>
+</thead>
+<tbody class="text-copy">
+<tr class="border-t border-border-color hover:bg-slate-50 transition-colors duration-200">
+<td class="px-6 py-4 font-medium">Casey Miller</td>
+<td class="px-6 py-4 text-copy-light">Oct 26, 2023</td>
+<td class="px-6 py-4 text-copy-light">50 min</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+</td>
+</tr>
+<tr class="border-t border-border-color hover:bg-slate-50 transition-colors duration-200">
+<td class="px-6 py-4 font-medium">Leo Martinez</td>
+<td class="px-6 py-4 text-copy-light">Oct 26, 2023</td>
+<td class="px-6 py-4 text-copy-light">50 min</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Draft</span>
+</td>
+</tr>
+<tr class="border-t border-border-color hover:bg-slate-50 transition-colors duration-200">
+<td class="px-6 py-4 font-medium">Riley Davis</td>
+<td class="px-6 py-4 text-copy-light">Oct 25, 2023</td>
+<td class="px-6 py-4 text-copy-light">50 min</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+</td>
+</tr>
+<tr class="border-t border-border-color hover:bg-slate-50 transition-colors duration-200">
+<td class="px-6 py-4 font-medium">Nora Evans</td>
+<td class="px-6 py-4 text-copy-light">Oct 25, 2023</td>
+<td class="px-6 py-4 text-copy-light">25 min</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Pending</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="bg-surface border border-border-color p-6 rounded-lg shadow-soft">
+<h2 class="text-copy text-lg font-bold leading-tight tracking-[-0.015em] mb-4">Quick Actions</h2>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<button class="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-slate-50 hover:bg-slate-100 border border-border-color transition-colors duration-200">
+<span class="material-symbols-outlined text-primary text-3xl">edit_document</span>
+<span class="font-semibold text-sm text-copy">New Note</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-slate-50 hover:bg-slate-100 border border-border-color transition-colors duration-200">
+<span class="material-symbols-outlined text-primary text-3xl">schedule</span>
+<span class="font-semibold text-sm text-copy">Schedule Session</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-slate-50 hover:bg-slate-100 border border-border-color transition-colors duration-200">
+<span class="material-symbols-outlined text-primary text-3xl">person_add</span>
+<span class="font-semibold text-sm text-copy">Add Client</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

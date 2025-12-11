@@ -1,42 +1,73 @@
-import { Metadata } from 'next';
+import { getCurrentUser } from "@/lib/auth/getCurrentUser";
+import { redirect } from "next/navigation";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'My Sessions | Therassist',
-  description: 'View your therapy sessions',
+  title: "Dashboard | Therassist",
+  description: "Your client dashboard",
 };
 
-export default function ClientSessionsPage() {
+export default async function ClientDashboard() {
+  const user = await getCurrentUser();
+
+  if (!user || user.role !== "client") {
+    redirect("/login");
+  }
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">My Sessions</h1>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-          Book Session
-        </button>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Welcome back, {user.name || "Client"}
+        </h1>
+        <p className="text-muted-foreground">
+          Manage your therapy sessions and appointments
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-start justify-between">
-              <div className="flex gap-4">
-                <div className="w-16 h-16 rounded-full bg-gray-200" />
-                <div>
-                  <h3 className="text-lg font-semibold mb-1">Dr. Therapist {i}</h3>
-                  <p className="text-sm text-gray-600">December {i * 5}, 2025 • 60 minutes</p>
-                  <div className="mt-2">
-                    <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
-                      Completed
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <button className="px-4 py-2 border rounded-md hover:bg-gray-50">
-                View Details
-              </button>
-            </div>
+      <div className="grid gap-4 md:grid-cols-3">
+        {/* Dashboard stats/widgets will go here */}
+        <div className="rounded-lg border bg-card p-6">
+          <h3 className="text-sm font-medium text-muted-foreground">
+            Upcoming Sessions
+          </h3>
+          <p className="mt-2 text-3xl font-bold">0</p>
+        </div>
+
+        <div className="rounded-lg border bg-card p-6">
+          <h3 className="text-sm font-medium text-muted-foreground">
+            Total Sessions
+          </h3>
+          <p className="mt-2 text-3xl font-bold">0</p>
+        </div>
+
+        <div className="rounded-lg border bg-card p-6">
+          <h3 className="text-sm font-medium text-muted-foreground">
+            Hours Completed
+          </h3>
+          <p className="mt-2 text-3xl font-bold">0</p>
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-lg border bg-card p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Upcoming Sessions</h2>
+            <button className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700">
+              Book Session
+            </button>
           </div>
-        ))}
+          <p className="text-sm text-muted-foreground">
+            No upcoming sessions scheduled
+          </p>
+        </div>
+
+        <div className="rounded-lg border bg-card p-6">
+          <h2 className="text-xl font-semibold mb-4">Recent Sessions</h2>
+          <p className="text-sm text-muted-foreground">
+            No recent sessions to display
+          </p>
+        </div>
       </div>
     </div>
   );

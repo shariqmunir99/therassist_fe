@@ -27,7 +27,12 @@ export default async function DashboardLayout({
         items: [
           {
             label: "Dashboard",
-            href: "/dashboard",
+            href:
+              user.role === "therapist"
+                ? "/dashboard/therapists"
+                : user.role === "client"
+                ? "/dashboard/clients"
+                : "/dashboard",
             icon: "Home",
           },
         ],
