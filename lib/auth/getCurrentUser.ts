@@ -54,16 +54,20 @@ export async function getCurrentUser(): Promise<User | null> {
       return null;
     }
 
+    let role: "therapist" | "client" = payload.role
+      ? payload.role?.toLowerCase() === "therapist"
+        ? "therapist"
+        : "client"
+      : "therapist";
+
+    role = "therapist"; // Temporary hardcode until backend includes role in JWT
+
     // Extract user info from token payload
     // Adjust field names based on your backend's JWT structure
     return {
       id: payload.sub || payload.id || payload.user_id || payload.userId,
       email: payload.email,
-      role: payload.role
-        ? payload.role?.toLowerCase() === "therapist"
-          ? "therapist"
-          : "client"
-        : "therapist",
+      role: role,
       name:
         payload.first_name && payload.last_name
           ? `${payload.first_name} ${payload.last_name}`
@@ -95,6 +99,8 @@ export async function requireAuth(): Promise<User> {
  */
 export async function requireRole(allowedRoles: string[]): Promise<User> {
   const user = await requireAuth();
+
+  console.log("Current user:", user);
 
   if (!allowedRoles.includes(user.role)) {
     throw new Error("Forbidden - Insufficient permissions");

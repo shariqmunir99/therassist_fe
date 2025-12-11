@@ -1,5 +1,18 @@
 import { Client } from "../models/Client";
 
+export interface GetClientsParams {
+  therapistId: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface GetClientsResponse {
+  data: Client[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 // MOCK DATA - Replace with real API call when backend is ready
 const MOCK_CLIENTS: Client[] = [
   {
@@ -66,28 +79,28 @@ const MOCK_CLIENTS: Client[] = [
   },
 ];
 
-export async function getClient(id: string): Promise<Client> {
+export async function getClients(
+  params: GetClientsParams
+): Promise<GetClientsResponse> {
   // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 300));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   // TODO: Replace with real API call when backend is ready
-  // const { data } = await axios.get<Client>(`/api/clients/${id}`);
+  // const { data } = await axios.get<GetClientsResponse>(
+  //   `/api/therapists/${params.therapistId}/clients`,
+  //   {
+  //     params: {
+  //       page: params.page,
+  //       limit: params.limit,
+  //     },
+  //   }
+  // );
   // return data;
 
-  const client = MOCK_CLIENTS.find((c) => c.id === id);
-  if (!client) {
-    throw new Error("Client not found");
-  }
-  return client;
-}
-
-export async function getClientProfile(): Promise<Client> {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 300));
-
-  // TODO: Replace with real API call when backend is ready
-  // const { data } = await axios.get<Client>('/api/clients/me');
-  // return data;
-
-  return MOCK_CLIENTS[0];
+  return {
+    data: MOCK_CLIENTS,
+    total: MOCK_CLIENTS.length,
+    page: params.page || 1,
+    limit: params.limit || 10,
+  };
 }

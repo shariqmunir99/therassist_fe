@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { Client } from '../models/Client';
-import { Button } from '@/modules/shared/components/ui/Button';
+import { Client, AGE_GROUPS } from "../models/Client";
+import { Button } from "@/components/ui/button";
 
 interface ClientCardProps {
   client: Client;
@@ -9,35 +9,28 @@ interface ClientCardProps {
 }
 
 export function ClientCard({ client, onViewDetails }: ClientCardProps) {
+  const ageGroupLabel =
+    AGE_GROUPS.find((g) => g.value === client.ageGroup)?.label ||
+    client.ageGroup;
+
   return (
-    <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+    <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-white">
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-          {client.avatarUrl ? (
-            <img
-              src={client.avatarUrl}
-              alt={client.name}
-              className="w-full h-full rounded-full object-cover"
-            />
-          ) : (
-            <span className="text-lg font-semibold text-gray-600">
-              {client.name.charAt(0)}
-            </span>
-          )}
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+          <span className="text-lg font-semibold text-white">
+            {client.alias.charAt(0).toUpperCase()}
+          </span>
         </div>
         <div className="flex-1">
-          <h3 className="font-semibold">{client.name}</h3>
-          <p className="text-sm text-gray-600">{client.email}</p>
-          {client.phone && (
-            <p className="text-sm text-gray-500">{client.phone}</p>
-          )}
+          <h3 className="font-semibold text-lg">{client.alias}</h3>
+          <p className="text-sm text-gray-600">{ageGroupLabel}</p>
         </div>
         <Button
           onClick={() => onViewDetails?.(client.id)}
           variant="outline"
           size="sm"
         >
-          View
+          View Details
         </Button>
       </div>
     </div>

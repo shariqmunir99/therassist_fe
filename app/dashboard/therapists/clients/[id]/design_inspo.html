@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Client Details Page - Insights</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2563eb", // Using Tailwind's blue-600 as the primary color
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101422",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .shadow-soft {
+                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            }
+        }
+    </style>
+</head>
+
+<body class="font-display bg-background-light dark:bg-background-dark text-[#111218] dark:text-gray-200">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl">
+                <div class="mb-6 flex flex-wrap items-center gap-2">
+                    <a class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary"
+                        href="#">Clients</a>
+                    <span class="text-sm text-gray-400 dark:text-gray-500">/</span>
+                    <span class="text-sm font-medium text-[#111218] dark:text-white">CLIENT-A83X</span>
+                </div>
+                <section class="mb-8">
+                    <div class="flex flex-wrap items-start justify-between gap-4">
+                        <div class="flex flex-col gap-3">
+                            <p
+                                class="text-4xl font-black leading-tight tracking-[-0.033em] text-[#111218] dark:text-white">
+                                CLIENT-A83X</p>
+                            <p class="text-base font-normal text-gray-500 dark:text-gray-400">25-34, Female</p>
+                        </div>
+                        <div class="relative flex items-center gap-2">
+                            <button
+                                class="flex h-10 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-primary px-4 text-sm font-bold leading-normal tracking-[0.015em] text-white">
+                                <span class="material-symbols-outlined text-xl">upload</span>
+                                <span class="truncate">Upload Session</span>
+                            </button>
+                            <div class="relative" x-data="{ open: false }">
+                                <button @click="open = !open"
+                                    class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 text-[#111218] dark:text-gray-200">
+                                    <span class="material-symbols-outlined text-xl">more_vert</span>
+                                </button>
+                                <div @click.away="open = false"
+                                    class="absolute right-0 mt-2 w-48 origin-top-right rounded-lg bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                    style="display: none;" x-show="open" x-transition="">
+                                    <div class="py-1">
+                                        <a class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                            href="#">Edit Client Profile</a>
+                                        <a class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                            href="#">Archive Client</a>
+                                        <a class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                            href="#">Export Insights</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex flex-wrap items-center gap-2">
+                        <div
+                            class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-green-100 dark:bg-green-900/50 px-3">
+                            <span class="material-symbols-outlined text-base text-green-700 dark:text-green-300"
+                                style="font-variation-settings: 'FILL' 1;">circle</span>
+                            <p class="text-sm font-medium text-green-800 dark:text-green-200">Low Risk</p>
+                        </div>
+                        <div
+                            class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-200 dark:bg-gray-700/50 px-3">
+                            <p class="text-sm font-medium text-[#111218] dark:text-gray-200">Anxiety</p>
+                        </div>
+                        <div
+                            class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-200 dark:bg-gray-700/50 px-3">
+                            <p class="text-sm font-medium text-[#111218] dark:text-gray-200">CBT</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 max-w-3xl text-base font-normal leading-normal text-gray-600 dark:text-gray-400">
+                        Background Notes: Client has been showing progress in managing anxiety through cognitive
+                        behavioral therapy techniques. Initial sessions focused on identifying triggers...
+                    </p>
+                </section>
+                <section class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+                    <div
+                        class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30 p-4 shadow-soft">
+                        <p class="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">Total Sessions</p>
+                        <p class="text-3xl font-bold text-[#111218] dark:text-white">12</p>
+                    </div>
+                    <div
+                        class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30 p-4 shadow-soft">
+                        <p class="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">Last Session</p>
+                        <p class="text-3xl font-bold text-[#111218] dark:text-white">Oct 26, 2023</p>
+                    </div>
+                    <div
+                        class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30 p-4 shadow-soft">
+                        <p class="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">Processing Status</p>
+                        <p class="text-3xl font-bold text-[#111218] dark:text-white">2 Pending</p>
+                    </div>
+                </section>
+                <section>
+                    <div class="border-b border-gray-200 dark:border-gray-700">
+                        <nav aria-label="Tabs" class="-mb-px flex space-x-6">
+                            <a class="border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-500 hover:text-gray-700 dark:hover:text-gray-200 whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold"
+                                href="#">Sessions</a>
+                            <a class="border-primary text-primary whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold"
+                                href="#">Insights</a>
+                        </nav>
+                    </div>
+                    <div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+                        <div class="space-y-6 lg:col-span-2">
+                            <div
+                                class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 p-6 shadow-soft">
+                                <h3 class="text-lg font-semibold text-[#111218] dark:text-white">Sentiment Trend Over
+                                    Time</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Positive, negative, and neutral
+                                    sentiment across sessions.</p>
+                                <div class="h-64">
+                                    <svg class="text-gray-300 dark:text-gray-700" height="100%"
+                                        preserveAspectRatio="xMidYMid meet" viewBox="0 0 400 200" width="100%">
+                                        <line stroke="currentColor" stroke-width="1" x1="30" x2="30" y1="10" y2="170">
+                                        </line>
+                                        <line stroke="currentColor" stroke-width="1" x1="30" x2="390" y1="170" y2="170">
+                                        </line>
+                                        <polyline fill="none" points="50,120 120,80 190,100 260,60 330,90 380,70"
+                                            stroke="#2563eb" stroke-width="2"></polyline>
+                                        <circle cx="50" cy="120" fill="#2563eb" r="4" stroke="white" stroke-width="2">
+                                        </circle>
+                                        <circle cx="120" cy="80" fill="#2563eb" r="4" stroke="white" stroke-width="2">
+                                        </circle>
+                                        <circle cx="190" cy="100" fill="#2563eb" r="4" stroke="white" stroke-width="2">
+                                        </circle>
+                                        <circle cx="260" cy="60" fill="#2563eb" r="4" stroke="white" stroke-width="2">
+                                        </circle>
+                                        <circle cx="330" cy="90" fill="#2563eb" r="4" stroke="white" stroke-width="2">
+                                        </circle>
+                                        <circle cx="380" cy="70" fill="#2563eb" r="4" stroke="white" stroke-width="2">
+                                        </circle>
+                                        <text class="fill-current text-gray-500 dark:text-gray-400" font-size="10"
+                                            text-anchor="middle" x="50" y="185">Aug</text>
+                                        <text class="fill-current text-gray-500 dark:text-gray-400" font-size="10"
+                                            text-anchor="middle" x="155" y="185">Sep</text>
+                                        <text class="fill-current text-gray-500 dark:text-gray-400" font-size="10"
+                                            text-anchor="middle" x="260" y="185">Oct</text>
+                                        <text class="fill-current text-gray-500 dark:text-gray-400" font-size="10"
+                                            text-anchor="middle" x="365" y="185">Nov</text>
+                                        <text class="fill-current text-gray-500 dark:text-gray-400" font-size="10"
+                                            text-anchor="end" x="20" y="10">1.0</text>
+                                        <text class="fill-current text-gray-500 dark:text-gray-400" font-size="10"
+                                            text-anchor="end" x="20" y="90">0.0</text>
+                                        <text class="fill-current text-gray-500 dark:text-gray-400" font-size="10"
+                                            text-anchor="end" x="20" y="170">-1.0</text>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 p-6 shadow-soft">
+                                <h3 class="text-lg font-semibold text-[#111218] dark:text-white">Therapeutic Themes Over
+                                    Time</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Progression of key discussion
+                                    themes.</p>
+                                <div
+                                    class="relative space-y-8 pl-6 before:absolute before:inset-y-0 before:left-6 before:w-0.5 before:bg-gray-200 dark:before:bg-gray-700">
+                                    <div class="relative">
+                                        <div
+                                            class="absolute -left-9 top-1.5 size-6 rounded-full bg-blue-500 ring-4 ring-white dark:ring-gray-900">
+                                        </div>
+                                        <h4 class="font-semibold">Initial Assessment &amp; Rapport Building</h4>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Sessions 1-3</p>
+                                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Focus on understanding
+                                            client's history and building trust.</p>
+                                    </div>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute -left-9 top-1.5 size-6 rounded-full bg-blue-500 ring-4 ring-white dark:ring-gray-900">
+                                        </div>
+                                        <h4 class="font-semibold">Cognitive Restructuring</h4>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Sessions 4-8</p>
+                                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Introduction and
+                                            practice of CBT techniques to challenge negative thought patterns.</p>
+                                    </div>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute -left-9 top-1.5 size-6 rounded-full bg-blue-500 ring-4 ring-white dark:ring-gray-900">
+                                        </div>
+                                        <h4 class="font-semibold">Behavioral Activation</h4>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Sessions 9-12</p>
+                                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Encouraging engagement
+                                            in positive activities and monitoring mood changes.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            <div
+                                class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 p-6 shadow-soft">
+                                <h3 class="text-lg font-semibold text-[#111218] dark:text-white">Emotion Distribution
+                                </h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Predominant emotions expressed.
+                                </p>
+                                <div class="flex items-center justify-center py-4">
+                                    <svg height="180" viewBox="0 0 100 100" width="180">
+                                        <circle cx="50" cy="50" fill="none" r="40" stroke="#dbeafe" stroke-width="20">
+                                        </circle>
+                                        <circle cx="50" cy="50" fill="none" r="40" stroke="#93c5fd"
+                                            stroke-dasharray="100.48 251.2" stroke-dashoffset="0" stroke-width="20">
+                                        </circle>
+                                        <circle cx="50" cy="50" fill="none" r="40" stroke="#60a5fa"
+                                            stroke-dasharray="75.36 251.2" stroke-dashoffset="-100.48"
+                                            stroke-width="20"></circle>
+                                        <circle cx="50" cy="50" fill="none" r="40" stroke="#3b82f6"
+                                            stroke-dasharray="37.68 251.2" stroke-dashoffset="-175.84"
+                                            stroke-width="20"></circle>
+                                        <text class="fill-current text-[#111218] dark:text-white" font-size="12"
+                                            font-weight="bold" text-anchor="middle" x="50" y="55">Overall</text>
+                                    </svg>
+                                </div>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex items-center justify-between"><span class="flex items-center"><span
+                                                class="mr-2 inline-block h-3 w-3 rounded-full bg-[#dbeafe]"></span>Anxiety</span>
+                                        <span class="font-medium text-gray-700 dark:text-gray-300">40%</span>
+                                    </div>
+                                    <div class="flex items-center justify-between"><span class="flex items-center"><span
+                                                class="mr-2 inline-block h-3 w-3 rounded-full bg-[#93c5fd]"></span>Sadness</span>
+                                        <span class="font-medium text-gray-700 dark:text-gray-300">30%</span>
+                                    </div>
+                                    <div class="flex items-center justify-between"><span class="flex items-center"><span
+                                                class="mr-2 inline-block h-3 w-3 rounded-full bg-[#60a5fa]"></span>Hopefulness</span>
+                                        <span class="font-medium text-gray-700 dark:text-gray-300">15%</span>
+                                    </div>
+                                    <div class="flex items-center justify-between"><span class="flex items-center"><span
+                                                class="mr-2 inline-block h-3 w-3 rounded-full bg-[#3b82f6]"></span>Other</span>
+                                        <span class="font-medium text-gray-700 dark:text-gray-300">15%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 p-6 shadow-soft">
+                                <h3 class="text-lg font-semibold text-[#111218] dark:text-white">Keyword Frequency</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Commonly used words and
+                                    phrases.</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="rounded-full bg-blue-100 dark:bg-blue-900/50 px-3 py-1 text-sm font-medium text-blue-800 dark:text-blue-200">Anxious</span>
+                                    <span
+                                        class="rounded-full bg-blue-100 dark:bg-blue-900/50 px-2.5 py-1 text-xs font-medium text-blue-800 dark:text-blue-200">Work
+                                        Stress</span>
+                                    <span
+                                        class="rounded-full bg-blue-100 dark:bg-blue-900/50 px-3 py-1 text-sm font-medium text-blue-800 dark:text-blue-200">Family</span>
+                                    <span
+                                        class="rounded-full bg-blue-100 dark:bg-blue-900/50 px-2.5 py-1 text-xs font-medium text-blue-800 dark:text-blue-200">Sleep</span>
+                                    <span
+                                        class="rounded-full bg-blue-100 dark:bg-blue-900/50 px-2.5 py-1 text-xs font-medium text-blue-800 dark:text-blue-200">Overwhelmed</span>
+                                    <span
+                                        class="rounded-full bg-blue-100 dark:bg-blue-900/50 px-3 py-1 text-sm font-medium text-blue-800 dark:text-blue-200">Coping</span>
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-xl border border-yellow-300 dark:border-yellow-700 bg-yellow-50 dark:bg-yellow-900/30 p-4 shadow-soft">
+                                <div class="flex items-start gap-3">
+                                    <span
+                                        class="material-symbols-outlined text-xl text-yellow-600 dark:text-yellow-400 mt-0.5">warning</span>
+                                    <div>
+                                        <h4 class="font-semibold text-yellow-800 dark:text-yellow-200">Risk Flag Summary
+                                        </h4>
+                                        <p class="text-sm text-yellow-700 dark:text-yellow-300">Mentions of self-harm
+                                            detected in the last session. Review recommended.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script defer="" src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+</body>
+
+</html>
