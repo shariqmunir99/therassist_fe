@@ -22,17 +22,32 @@ import { AxiosError } from "axios";
 import { toast } from "sonner";
 
 /**
- * Store authentication tokens and user data in localStorage
+ * Store authentication tokens and user data in localStorage AND cookies
+ * Cookies are needed for server-side components to access auth state
  */
 const storeTokens = (
   accessToken: string,
   refreshToken: string,
   userId?: string
 ) => {
+  // Store in localStorage for client-side access
   localStorage.setItem("access_token", accessToken);
   localStorage.setItem("refresh_token", refreshToken);
   if (userId) {
     localStorage.setItem("user_id", userId);
+  }
+
+  // Also store in cookies for server-side access (30 days)
+  document.cookie = `access_token=${accessToken}; path=/; max-age=${
+    30 * 24 * 60 * 60
+  }; SameSite=Lax`;
+  document.cookie = `refresh_token=${refreshToken}; path=/; max-age=${
+    30 * 24 * 60 * 60
+  }; SameSite=Lax`;
+  if (userId) {
+    document.cookie = `user_id=${userId}; path=/; max-age=${
+      30 * 24 * 60 * 60
+    }; SameSite=Lax`;
   }
 };
 
@@ -82,9 +97,10 @@ export const useAuth = () => {
     onSuccess: (response) => {
       if (response.data) {
         toast.success("Login successful!");
+        console.log("Login response:", response.data);
         storeTokens(
-          response.data.accessToken,
-          response.data.refreshToken,
+          response.data.access_token,
+          response.data.refresh_token,
           response.data.id
         );
         router.push("/dashboard/therapists/clients");
@@ -121,8 +137,8 @@ export const useAuth = () => {
     onSuccess: (response) => {
       if (response.data) {
         storeTokens(
-          response.data.accessToken,
-          response.data.refreshToken,
+          response.data.access_token,
+          response.data.refresh_token,
           response.data.id
         );
         router.push("/dashboard/clients");
@@ -143,8 +159,8 @@ export const useAuth = () => {
       if (response.data) {
         toast.success("Signup successful! You are now logged in.");
         storeTokens(
-          response.data.accessToken,
-          response.data.refreshToken,
+          response.data.access_token,
+          response.data.refresh_token,
           response.data.id
         );
         router.push("/dashboard/therapists/clients");

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Noto_Sans } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ReactQueryProvider } from "@/lib/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { SidebarConfigProvider } from "@/components/sidebar";
 
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
@@ -40,11 +40,11 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable}  ${inter.variable} antialiased`}>
         <ReactQueryProvider>
-          {/*TODO: Add props to navbar (maybe) for checking which version of navbar (authenticated or default) to show. */}
-          <Navbar />
-          {children}
-          <Footer />
-          <Toaster />
+          <SidebarConfigProvider>
+            {children}
+            <Footer />
+            <Toaster />
+          </SidebarConfigProvider>
         </ReactQueryProvider>
       </body>
     </html>

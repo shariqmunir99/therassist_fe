@@ -11,7 +11,7 @@ export const queryClient = new QueryClient({
 
         // Retry only for server errors
         const status = error.status;
-        if (status === 401 || status === 403) return false; // no retry
+        if (status === 401 || status === 403 || status === 400) return false; // no retry
         if (status >= 500) return true; // retry server errors
         return false;
       },

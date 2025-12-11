@@ -75,6 +75,11 @@ export const logout = async (): Promise<void> => {
   localStorage.removeItem("refresh_token");
   localStorage.removeItem("user_id");
 
+  // Clear cookies
+  document.cookie = "access_token=; path=/; max-age=0";
+  document.cookie = "refresh_token=; path=/; max-age=0";
+  document.cookie = "user_id=; path=/; max-age=0";
+
   // Optionally call backend logout endpoint to invalidate tokens
   try {
     await axios.post("/auth/logout");

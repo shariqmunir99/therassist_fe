@@ -1,13 +1,13 @@
 /**
  * Authentication Types
- * 
+ *
  * Type definitions for Supabase authentication system
  */
 
 /**
  * User type discriminator
  */
-export type UserType = 'Therapist' | 'Client';
+export type UserType = "Therapist" | "Client";
 
 /**
  * Authenticated user data from Supabase
@@ -15,8 +15,8 @@ export type UserType = 'Therapist' | 'Client';
 export interface AuthUser {
   id: string;
   email: string;
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
   needsEmailVerification?: boolean;
 }
 

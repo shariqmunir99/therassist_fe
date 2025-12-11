@@ -1,5 +1,9 @@
-import { redirect } from 'next/navigation';
-import { getCurrentUser } from '@/lib/auth/getCurrentUser';
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth/getCurrentUser";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/sidebar";
+import { SidebarConfig } from "@/components/sidebar";
+import { DashboardHeader } from "./dashboard-header";
 
 export default async function DashboardLayout({
   children,
@@ -7,54 +11,80 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const user = await getCurrentUser();
-  
+
+  // If no user, the middleware will handle the redirect
+  // We return null here to prevent double redirects
   if (!user) {
-    redirect('/login');
+    return null;
   }
 
+  // Build sidebar configuration based on user role
+  const sidebarConfig: SidebarConfig = {
+    title: "Therassist",
+    groups: [
+      {
+        title: "Main",
+        items: [
+          {
+            label: "Dashboard",
+            href: "/dashboard",
+            icon: "Home",
+          },
+        ],
+      },
+      ...(user.role === "therapist"
+        ? [
+            {
+              title: "Therapist",
+              items: [
+                {
+                  label: "Clients",
+                  href: "/dashboard/therapists/clients",
+                  icon: "Users",
+                },
+                {
+                  label: "Sessions",
+                  href: "/dashboard/therapists/sessions",
+                  icon: "Video",
+                },
+                {
+                  label: "Availability",
+                  href: "/dashboard/therapists/availability",
+                  icon: "Calendar",
+                },
+                {
+                  label: "Settings",
+                  href: "/dashboard/therapists/settings",
+                  icon: "Settings",
+                },
+              ],
+            },
+          ]
+        : []),
+      ...(user.role === "client"
+        ? [
+            {
+              title: "Client",
+              items: [
+                {
+                  label: "My Sessions",
+                  href: "/dashboard/clients",
+                  icon: "Video",
+                },
+              ],
+            },
+          ]
+        : []),
+    ],
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-8">
-              <h1 className="text-xl font-bold">Therassist</h1>
-              <div className="flex gap-4">
-                <a href="/dashboard" className="text-gray-700 hover:text-blue-600">
-                  Dashboard
-                </a>
-                {user.role === 'therapist' && (
-                  <>
-                    <a href="/dashboard/therapists/clients" className="text-gray-700 hover:text-blue-600">
-                      Clients
-                    </a>
-                    <a href="/dashboard/therapists/sessions" className="text-gray-700 hover:text-blue-600">
-                      Sessions
-                    </a>
-                    <a href="/dashboard/therapists/availability" className="text-gray-700 hover:text-blue-600">
-                      Availability
-                    </a>
-                  </>
-                )}
-                {user.role === 'client' && (
-                  <a href="/dashboard/clients/sessions" className="text-gray-700 hover:text-blue-600">
-                    My Sessions
-                  </a>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">{user.name}</span>
-              <button className="text-sm text-red-600 hover:text-red-700">
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-      <main className="container mx-auto px-4 py-8">
-        {children}
-      </main>
-    </div>
+    <SidebarProvider>
+      <AppSidebar config={sidebarConfig} />
+      <SidebarInset>
+        <DashboardHeader userName={user.name || user.email} />
+        <main className="flex flex-1 flex-col gap-4 p-4">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
