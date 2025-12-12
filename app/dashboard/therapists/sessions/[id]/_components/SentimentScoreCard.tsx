@@ -22,18 +22,22 @@ export function SentimentScoreCard({ score, label }: SentimentScoreCardProps) {
   };
 
   return (
-    <Card className="flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-white p-6 text-center shadow-sm">
-      <CardHeader className="p-0">
+    <Card className="flex h-full flex-col rounded-lg border border-gray-200 bg-white shadow-sm">
+      <CardHeader>
         <CardTitle className="text-base font-bold text-[#111318]">
           Sentiment Score
         </CardTitle>
-        <CardDescription className="text-sm text-[#616e89] mb-2">
+        <CardDescription className="text-sm text-[#616e89]">
           Overall emotional tone.
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-0 mt-4">
-        <p className={`text-5xl font-bold ${getScoreColor(score)}`}>{score}</p>
-        <p className="mt-2 text-sm font-medium text-gray-500">{label}</p>
+      <CardContent className="flex flex-1 flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center">
+          <p className={`text-5xl font-bold ${getScoreColor(score)}`}>
+            {score}
+          </p>
+          <p className="mt-2 text-sm font-medium text-gray-500">{label}</p>
+        </div>
       </CardContent>
     </Card>
   );

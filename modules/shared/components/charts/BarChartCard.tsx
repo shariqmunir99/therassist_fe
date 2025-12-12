@@ -47,7 +47,7 @@ export function BarChartCard({
 
   return (
     <Card
-      className={`rounded-lg border border-gray-200 bg-white shadow-sm ${className}`}
+      className={`flex h-full flex-col rounded-lg border border-gray-200 bg-white shadow-sm ${className}`}
     >
       <CardHeader>
         <CardTitle className="text-base font-bold text-[#111318]">
@@ -57,31 +57,33 @@ export function BarChartCard({
           {description}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-56 w-full">
-          <BarChart
-            data={data}
-            layout={layout}
-            margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
-          >
-            {layout === "horizontal" ? (
-              <>
-                <XAxis type="number" />
-                <YAxis type="category" dataKey="name" />
-              </>
-            ) : (
-              <>
-                <XAxis type="category" dataKey="name" />
-                <YAxis type="number" />
-              </>
-            )}
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Bar dataKey="value" radius={4} />
-          </BarChart>
-        </ChartContainer>
+      <CardContent className="flex flex-1 flex-col">
+        <div className="flex flex-1 items-center justify-center">
+          <ChartContainer config={chartConfig} className="h-56 w-full">
+            <BarChart
+              data={data}
+              layout={layout}
+              margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
+            >
+              {layout === "horizontal" ? (
+                <>
+                  <XAxis type="number" />
+                  <YAxis type="category" dataKey="name" />
+                </>
+              ) : (
+                <>
+                  <XAxis type="category" dataKey="name" />
+                  <YAxis type="number" />
+                </>
+              )}
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Bar dataKey="value" radius={4} />
+            </BarChart>
+          </ChartContainer>
+        </div>
       </CardContent>
     </Card>
   );

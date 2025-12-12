@@ -3,7 +3,9 @@
 import { useParams } from "next/navigation";
 import { SessionHeader } from "./_components/SessionHeader";
 import { SessionInfoCard } from "./_components/SessionInfoCard";
+import { SessionInfoCardSkeleton } from "./_components/SessionInfoCardSkeleton";
 import { InsightsTab } from "./_components/InsightsTab";
+import { InsightsTabSkeleton } from "./_components/InsightsTabSkeleton";
 import {
   useSession,
   useSessionInsights,
@@ -17,10 +19,10 @@ export default function SessionDetailPage() {
   // Fetch session data
   const { data: session, isLoading: isLoadingSession } = useSession(sessionId);
 
-  // Fetch session insights (using mock data for now)
+  // Fetch session insights (now using real API)
   const { data: insights, isLoading: isLoadingInsights } = useSessionInsights(
     sessionId,
-    true // Set to false when backend is ready
+    false // Using real API now
   );
 
   // Mutation for updating notes
@@ -35,18 +37,8 @@ export default function SessionDetailPage() {
     updateNotesMutation.mutate({ sessionId, notes });
   };
 
-  if (isLoadingSession || isLoadingInsights) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-[#2463eb]"></div>
-          <p className="mt-4 text-sm text-gray-500">Loading session...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!session || !insights) {
+  // Show error state if session fails to load
+  if (!isLoadingSession && !session) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
@@ -63,14 +55,13 @@ export default function SessionDetailPage() {
   }
 
   // Format session date
-  const sessionDate = new Date(session.sessionDate).toLocaleDateString(
-    "en-US",
-    {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }
-  );
+  const sessionDate = session
+    ? new Date(session.sessionDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
 
   return (
     <div className="flex w-full flex-col gap-8">
@@ -79,18 +70,35 @@ export default function SessionDetailPage() {
         onStartQuerying={handleStartQuerying}
       />
 
-      <SessionInfoCard
-        patientName={session.clientId} // TODO: Fetch client name
-        sessionDate={sessionDate}
-        sessionId={session.id}
-        status={session.status}
-      />
+      {/* Session Info Card - Show skeleton while loading */}
+      {isLoadingSession ? (
+        <SessionInfoCardSkeleton />
+      ) : (
+        session && (
+          <SessionInfoCard
+            alias={session.alias || session.clientId}
+            sessionDate={sessionDate}
+            sessionId={`SES-${session.session_number}`}
+            status={session.processing_state}
+            duration={session.duration}
+          />
+        )
+      )}
 
-      <InsightsTab
-        insights={insights}
-        therapistNotes={session.notes || ""}
-        onSaveNotes={handleSaveNotes}
-      />
+      {/* Insights Tab - Show skeleton while loading */}
+      {isLoadingInsights ? (
+        <InsightsTabSkeleton />
+      ) : (
+        insights &&
+        session && (
+          <InsightsTab
+            insights={insights}
+            session={session}
+            therapistNotes={session.notes || ""}
+            onSaveNotes={handleSaveNotes}
+          />
+        )
+      )}
     </div>
   );
 }

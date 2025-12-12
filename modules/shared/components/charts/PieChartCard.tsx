@@ -55,7 +55,7 @@ export function PieChartCard({
 
   return (
     <Card
-      className={`rounded-lg border border-gray-200 bg-white shadow-sm ${className}`}
+      className={`flex h-full flex-col rounded-lg border border-gray-200 bg-white shadow-sm ${className}`}
     >
       <CardHeader>
         <CardTitle className="text-base font-bold text-[#111318]">
@@ -65,48 +65,50 @@ export function PieChartCard({
           {description}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="mx-auto h-56">
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Pie
-              data={data}
-              dataKey="value"
-              nameKey="name"
-              innerRadius={innerRadius}
-              outerRadius={outerRadius}
-              strokeWidth={0}
-            >
-              {showCenterLabel && centerLabel && (
-                <Label
-                  content={({ viewBox }) => {
-                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                      return (
-                        <text
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                        >
-                          <tspan
+      <CardContent className="flex flex-1 flex-col">
+        <div className="flex flex-1 items-center justify-center">
+          <ChartContainer config={chartConfig} className="h-56 w-full">
+            <PieChart>
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="name"
+                innerRadius={innerRadius}
+                outerRadius={outerRadius}
+                strokeWidth={0}
+              >
+                {showCenterLabel && centerLabel && (
+                  <Label
+                    content={({ viewBox }) => {
+                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                        return (
+                          <text
                             x={viewBox.cx}
                             y={viewBox.cy}
-                            className="fill-[#111318] text-xl font-bold"
+                            textAnchor="middle"
+                            dominantBaseline="middle"
                           >
-                            {centerLabel}
-                          </tspan>
-                        </text>
-                      );
-                    }
-                  }}
-                />
-              )}
-            </Pie>
-          </PieChart>
-        </ChartContainer>
+                            <tspan
+                              x={viewBox.cx}
+                              y={viewBox.cy}
+                              className="fill-[#111318] text-xl font-bold"
+                            >
+                              {centerLabel}
+                            </tspan>
+                          </text>
+                        );
+                      }
+                    }}
+                  />
+                )}
+              </Pie>
+            </PieChart>
+          </ChartContainer>
+        </div>
         {showLegend && (
           <div className="mt-4 space-y-2 text-sm">
             {data.map((item) => (

@@ -23,4 +23,6 @@ export interface SessionInsights {
   sentimentScore: number;
   sentimentLabel: string;
   themes: string[];
+  theme?: string;
+  theme_explanation?: string | null;
 }

@@ -14,6 +14,12 @@ export interface Session {
   hasTranscription?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  alias?: string;
+  sentiment_score?: string;
+  therapist_count?: number;
+  client_count?: number;
+  therapist_time?: string;
+  client_time?: string;
 }
 
 export interface SessionFormData {

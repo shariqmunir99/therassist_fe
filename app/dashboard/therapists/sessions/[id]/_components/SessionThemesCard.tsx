@@ -9,10 +9,14 @@ import {
 } from "@/components/ui/card";
 
 interface SessionThemesCardProps {
-  themes: string[];
+  theme: string;
+  themeExplanation?: string | null;
 }
 
-export function SessionThemesCard({ themes }: SessionThemesCardProps) {
+export function SessionThemesCard({
+  theme,
+  themeExplanation,
+}: SessionThemesCardProps) {
   return (
     <Card className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
       <CardHeader className="p-0 mb-4">
@@ -24,19 +28,13 @@ export function SessionThemesCard({ themes }: SessionThemesCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="flex flex-wrap gap-2">
-          {themes.map((theme, index) => (
-            <span
-              key={index}
-              className={`rounded-full px-3 py-1.5 text-sm font-medium ${
-                index === 0
-                  ? "bg-blue-100 text-blue-800"
-                  : "bg-gray-100 text-gray-800"
-              }`}
-            >
-              {theme}
-            </span>
-          ))}
+        <div className="flex flex-col gap-2">
+          <h3 className="text-lg font-semibold text-[#111318]">{theme}</h3>
+          {themeExplanation && (
+            <p className="text-sm text-[#616e89] leading-relaxed">
+              {themeExplanation}
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>

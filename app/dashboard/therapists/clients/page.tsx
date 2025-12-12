@@ -389,25 +389,29 @@ export default function TherapistClientsPage() {
                 </div>
 
                 {/* Risk Level */}
-                {riskLevelConfig && (
-                  <div className="flex flex-col gap-2">
-                    <p className="text-xs font-semibold text-gray-500 uppercase">
-                      Risk Level
-                    </p>
+                <div className="flex flex-col gap-2">
+                  <p className="text-xs font-semibold text-gray-500 uppercase">
+                    Risk Level
+                  </p>
+                  {riskLevelConfig ? (
                     <span
                       className={`text-sm font-medium ${riskLevelConfig.text} ${riskLevelConfig.bg} py-1 px-3 rounded-full self-start`}
                     >
                       {riskLevelConfig.label}
                     </span>
-                  </div>
-                )}
+                  ) : (
+                    <p className="text-sm text-gray-400 italic">
+                      No information available
+                    </p>
+                  )}
+                </div>
 
                 {/* Tags */}
-                {client.tags && client.tags.length > 0 && (
-                  <div className="flex flex-col gap-2">
-                    <p className="text-xs font-semibold text-gray-500 uppercase">
-                      Tags
-                    </p>
+                <div className="flex flex-col gap-2">
+                  <p className="text-xs font-semibold text-gray-500 uppercase">
+                    Tags
+                  </p>
+                  {client.tags && client.tags.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {client.tags.map((tag) => (
                         <span
@@ -418,8 +422,12 @@ export default function TherapistClientsPage() {
                         </span>
                       ))}
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <p className="text-sm text-gray-400 italic mb-4">
+                      No information available
+                    </p>
+                  )}
+                </div>
 
                 <Button
                   variant="ghost"
