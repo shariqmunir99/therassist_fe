@@ -31,10 +31,10 @@ import { Button } from "@/components/ui/button";
 import { X, Plus } from "lucide-react";
 
 const clientFormSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .email("Please enter a valid email address"),
+  // email: z
+  //   .string()
+  //   .min(1, "Email is required")
+  //   .email("Please enter a valid email address"),
   alias: z
     .string()
     .min(1, "Alias is required")
@@ -75,7 +75,7 @@ export function ClientForm({
   const form = useForm<ClientFormData>({
     resolver: zodResolver(clientFormSchema),
     defaultValues: defaultValues || {
-      email: "",
+      // email: "",
       alias: "",
       ageGroup: undefined,
       gender: undefined,
@@ -111,8 +111,8 @@ export function ClientForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {/* Email - Full Width */}
-        <FormField
+        {/* Email - Full Width - TEMPORARILY HIDDEN */}
+        {/* <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
@@ -129,7 +129,7 @@ export function ClientForm({
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
           {/* Alias/Code */}

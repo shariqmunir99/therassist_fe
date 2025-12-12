@@ -1,17 +1,16 @@
 "use client";
 
 import { use, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useClient, ClientInsights } from "@/modules/client";
+import { useClient, ClientInsights, ClientStatsCards } from "@/modules/client";
 import { EditClientModal } from "@/modules/client/components/EditClientModal";
 import { UploadSessionModal } from "@/modules/session/components/UploadSessionModal";
+import { ClientSessionsTable } from "@/modules/session/components/ClientSessionsTable";
 import { useClients } from "@/modules/client/hooks/useClients";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card";
 import { AGE_GROUPS } from "@/modules/client/models/Client";
-import { Upload, Pencil, MoreVertical } from "lucide-react";
+import { Upload, Pencil } from "lucide-react";
 
 interface ClientDetailPageProps {
   params: Promise<{
@@ -21,7 +20,6 @@ interface ClientDetailPageProps {
 
 export default function ClientDetailPage({ params }: ClientDetailPageProps) {
   const { id } = use(params);
-  const router = useRouter();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isUploadSessionModalOpen, setIsUploadSessionModalOpen] =
     useState(false);
@@ -44,47 +42,7 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
       client.ageGroup
     : "";
 
-  // Mock data for demonstration
-  const mockSessions = [
-    {
-      id: "SES-012",
-      date: "Oct 26, 2023",
-      duration: "45 min",
-      status: "Processed",
-    },
-    {
-      id: "SES-011",
-      date: "Oct 19, 2023",
-      duration: "50 min",
-      status: "Pending",
-    },
-    {
-      id: "SES-010",
-      date: "Oct 12, 2023",
-      duration: "45 min",
-      status: "Pending",
-    },
-    {
-      id: "SES-009",
-      date: "Oct 05, 2023",
-      duration: "55 min",
-      status: "Error",
-    },
-  ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Processed":
-        return "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200";
-      case "Pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200";
-      case "Error":
-        return "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-200";
-    }
-  };
-
+  // Error state - client failed to load
   if (error) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-8">
@@ -97,17 +55,8 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
     );
   }
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto max-w-5xl px-4 py-8 space-y-6">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-32 w-full" />
-        <Skeleton className="h-64 w-full" />
-      </div>
-    );
-  }
-
-  if (!client) {
+  // Not found state
+  if (!isLoading && !client) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-8">
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -125,110 +74,135 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
         }`}
       >
         {/* Breadcrumb */}
-        <div className="mb-6 flex flex-wrap items-center gap-2">
-          <Link
-            href="/dashboard/therapists/clients"
-            className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary"
-          >
-            Clients
-          </Link>
-          <span className="text-sm text-gray-400 dark:text-gray-500">/</span>
-          <span className="text-sm font-medium text-[#111218] dark:text-white">
-            {client.alias}
-          </span>
-        </div>
+        {isLoading ? (
+          <div className="mb-6">
+            <Skeleton className="h-5 w-48" />
+          </div>
+        ) : (
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <Link
+              href="/dashboard/therapists/clients"
+              className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary"
+            >
+              Clients
+            </Link>
+            <span className="text-sm text-gray-400 dark:text-gray-500">/</span>
+            <span className="text-sm font-medium text-[#111218] dark:text-white">
+              {client?.alias}
+            </span>
+          </div>
+        )}
 
         {/* Header Section */}
         <section className="mb-8">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="flex flex-col gap-3">
-              <h1 className="text-4xl font-black leading-tight tracking-[-0.033em] text-[#111218] dark:text-white">
-                {client.alias}
-              </h1>
-              <p className="text-base font-normal text-gray-500 dark:text-gray-400">
-                {ageGroupLabel}
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={() => setIsUploadSessionModalOpen(true)}
-                className="flex h-10 min-w-[84px] items-center justify-center gap-2"
-              >
-                <Upload className="h-5 w-5" />
-                <span>Upload Session</span>
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => setIsEditModalOpen(true)}
-                className="h-10 gap-2"
-              >
-                <Pencil className="h-4 w-4" />
-                <span>Edit Client</span>
-              </Button>
-            </div>
-          </div>
+          {isLoading ? (
+            <>
+              <div className="mb-4">
+                <Skeleton className="mb-3 h-10 w-64" />
+                <Skeleton className="h-6 w-40" />
+              </div>
+              <div className="flex gap-2">
+                <Skeleton className="h-8 w-24" />
+                <Skeleton className="h-8 w-32" />
+              </div>
+              <Skeleton className="mt-4 h-16 w-full max-w-3xl" />
+            </>
+          ) : client ? (
+            <>
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="flex flex-col gap-3">
+                  <h1 className="text-4xl font-black leading-tight tracking-[-0.033em] text-[#111218] dark:text-white">
+                    {client.alias}
+                  </h1>
+                  <p className="text-base font-normal text-gray-500 dark:text-gray-400">
+                    {ageGroupLabel}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={() => setIsUploadSessionModalOpen(true)}
+                    className="flex h-10 min-w-[84px] items-center justify-center gap-2"
+                  >
+                    <Upload className="h-5 w-5" />
+                    <span>Upload Session</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsEditModalOpen(true)}
+                    className="h-10 gap-2"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span>Edit Client</span>
+                  </Button>
+                </div>
+              </div>
 
-          {/* Tags */}
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <div className="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-green-100 dark:bg-green-900/50 px-3">
-              <div className="h-2 w-2 rounded-full bg-green-700 dark:bg-green-300" />
-              <p className="text-sm font-medium text-green-800 dark:text-green-200">
-                Low Risk
-              </p>
-            </div>
-            <div className="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-200 dark:bg-gray-700/50 px-3">
-              <p className="text-sm font-medium text-[#111218] dark:text-gray-200">
-                Anxiety
-              </p>
-            </div>
-            <div className="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-200 dark:bg-gray-700/50 px-3">
-              <p className="text-sm font-medium text-[#111218] dark:text-gray-200">
-                CBT
-              </p>
-            </div>
-          </div>
+              {/* Tags */}
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                {/* Risk Level Badge */}
+                {client.riskLevel && (
+                  <div
+                    className={`flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full px-3 ${
+                      client.riskLevel === "low"
+                        ? "bg-green-100 dark:bg-green-900/50"
+                        : client.riskLevel === "medium"
+                        ? "bg-yellow-100 dark:bg-yellow-900/50"
+                        : "bg-red-100 dark:bg-red-900/50"
+                    }`}
+                  >
+                    <div
+                      className={`h-2 w-2 rounded-full ${
+                        client.riskLevel === "low"
+                          ? "bg-green-700 dark:bg-green-300"
+                          : client.riskLevel === "medium"
+                          ? "bg-yellow-700 dark:bg-yellow-300"
+                          : "bg-red-700 dark:bg-red-300"
+                      }`}
+                    />
+                    <p
+                      className={`text-sm font-medium ${
+                        client.riskLevel === "low"
+                          ? "text-green-800 dark:text-green-200"
+                          : client.riskLevel === "medium"
+                          ? "text-yellow-800 dark:text-yellow-200"
+                          : "text-red-800 dark:text-red-200"
+                      }`}
+                    >
+                      {client.riskLevel === "low"
+                        ? "Low Risk"
+                        : client.riskLevel === "medium"
+                        ? "Medium Risk"
+                        : "High Risk"}
+                    </p>
+                  </div>
+                )}
+                {/* Client Tags */}
+                {client.tags &&
+                  client.tags.map((tag) => (
+                    <div
+                      key={tag}
+                      className="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-gray-200 dark:bg-gray-700/50 px-3"
+                    >
+                      <p className="text-sm font-medium text-[#111218] dark:text-gray-200">
+                        {tag}
+                      </p>
+                    </div>
+                  ))}
+              </div>
 
-          {/* Background Notes */}
-          <p className="mt-4 max-w-3xl text-base font-normal leading-normal text-gray-600 dark:text-gray-400">
-            Background Notes: Client has been showing progress in managing
-            anxiety through cognitive behavioral therapy techniques. Initial
-            sessions focused on identifying triggers...
-          </p>
+              {/* Background Notes */}
+              {client.notes && (
+                <p className="mt-4 max-w-3xl text-base font-normal leading-normal text-gray-600 dark:text-gray-400">
+                  <span className="font-semibold">Background Notes:</span>{" "}
+                  {client.notes}
+                </p>
+              )}
+            </>
+          ) : null}
         </section>
 
-        {/* Stats Cards */}
-        <section className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-          <Card className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30">
-            <CardContent className="p-4">
-              <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                Total Sessions
-              </p>
-              <p className="text-3xl font-bold text-[#111218] dark:text-white">
-                12
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30">
-            <CardContent className="p-4">
-              <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                Last Session
-              </p>
-              <p className="text-3xl font-bold text-[#111218] dark:text-white">
-                Oct 26, 2023
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30">
-            <CardContent className="p-4">
-              <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                Processing Status
-              </p>
-              <p className="text-3xl font-bold text-[#111218] dark:text-white">
-                2 Pending
-              </p>
-            </CardContent>
-          </Card>
-        </section>
+        {/* Stats Cards - Loads independently */}
+        {!isLoading && client && <ClientStatsCards clientId={id} />}
 
         {/* Tabs and Table Section */}
         <section>
@@ -257,95 +231,26 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
             </nav>
           </div>
 
-          {/* Sessions Table */}
-          {activeTab === "sessions" && (
-            <div className="mt-6">
-              <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-gray-50 dark:bg-gray-800/50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
-                      >
-                        Session ID
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
-                      >
-                        Date
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
-                      >
-                        Duration
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
-                      >
-                        Status
-                      </th>
-                      <th scope="col" className="relative px-6 py-3">
-                        <span className="sr-only">Actions</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
-                    {mockSessions.map((session) => (
-                      <tr key={session.id}>
-                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-[#111218] dark:text-white">
-                          {session.id}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {session.date}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                          {session.duration}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 text-sm">
-                          <span
-                            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusColor(
-                              session.status
-                            )}`}
-                          >
-                            {session.status}
-                          </span>
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              router.push(
-                                `/dashboard/therapists/sessions/${session.id}`
-                              )
-                            }
-                          >
-                            View Details
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+          {/* Sessions Table - Loads independently */}
+          {activeTab === "sessions" && !isLoading && client && (
+            <ClientSessionsTable clientId={id} />
           )}
 
-          {/* Insights Tab */}
-          {activeTab === "insights" && <ClientInsights clientId={id} />}
+          {/* Insights Tab - Loads independently */}
+          {activeTab === "insights" && !isLoading && client && (
+            <ClientInsights clientId={id} />
+          )}
         </section>
       </div>
 
       {/* Edit Modal */}
-      <EditClientModal
-        client={client}
-        open={isEditModalOpen}
-        onOpenChange={setIsEditModalOpen}
-      />
+      {client && (
+        <EditClientModal
+          client={client}
+          open={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+        />
+      )}
 
       {/* Upload Session Modal */}
       <UploadSessionModal

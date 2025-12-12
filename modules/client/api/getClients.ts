@@ -1,4 +1,5 @@
-import { Client } from "../models/Client";
+import axios from "@/lib/axios";
+import { Client, AgeGroup } from "../models/Client";
 
 export interface GetClientsParams {
   therapistId: string;
@@ -13,94 +14,74 @@ export interface GetClientsResponse {
   limit: number;
 }
 
-// MOCK DATA - Replace with real API call when backend is ready
-const MOCK_CLIENTS: Client[] = [
-  {
-    id: "1",
-    therapistId: "therapist-1",
-    email: "john.doe@example.com",
-    alias: "JOHN_DOE",
-    ageGroup: "18-25",
-    gender: "male",
-    riskLevel: "medium",
-    tags: ["Anxiety", "CBT"],
-    notes: "Patient showing good progress with CBT techniques.",
-    createdAt: "2024-01-15T10:00:00Z",
-    updatedAt: "2024-01-15T10:00:00Z",
-  },
-  {
-    id: "2",
-    therapistId: "therapist-1",
-    email: "jane.smith@example.com",
-    alias: "JANE_SMITH",
-    ageGroup: "26-40",
-    gender: "female",
-    riskLevel: "low",
-    tags: ["Depression"],
-    createdAt: "2024-02-20T14:30:00Z",
-    updatedAt: "2024-02-20T14:30:00Z",
-  },
-  {
-    id: "3",
-    therapistId: "therapist-1",
-    email: "alex.jones@example.com",
-    alias: "ALEX_JONES",
-    ageGroup: "10-17",
-    gender: "non-binary",
-    riskLevel: "high",
-    tags: ["Family Conflict", "School Issues"],
-    createdAt: "2024-03-10T09:15:00Z",
-    updatedAt: "2024-03-10T09:15:00Z",
-  },
-  {
-    id: "4",
-    therapistId: "therapist-1",
-    email: "sarah.w@example.com",
-    alias: "SARAH_WILLIAMS",
-    ageGroup: "40-60",
-    gender: "female",
-    riskLevel: "medium",
-    tags: ["Trauma", "EMDR"],
-    createdAt: "2024-04-05T16:45:00Z",
-    updatedAt: "2024-04-05T16:45:00Z",
-  },
-  {
-    id: "5",
-    therapistId: "therapist-1",
-    email: "robert.b@example.com",
-    alias: "ROBERT_BROWN",
-    ageGroup: "60+",
-    gender: "male",
-    riskLevel: "low",
-    tags: ["Retirement Adjustment"],
-    notes: "Adapting well to retirement lifestyle changes.",
-    createdAt: "2024-05-12T11:20:00Z",
-    updatedAt: "2024-05-12T11:20:00Z",
-  },
-];
+// Backend response structure
+interface BackendClientData {
+  id: string;
+  alias: string;
+  age_group: string;
+  gender?: string;
+  tags?: string[];
+  background_notes?: string;
+  risk_level?: string;
+}
+
+interface BackendGetClientsResponse {
+  statusCode: number;
+  message: string;
+  error: string;
+  data: BackendClientData[];
+}
+
+// Transform backend age group to frontend format
+const transformBackendAgeGroup = (backendAgeGroup: string): AgeGroup => {
+  const mapping: Record<string, AgeGroup> = {
+    adolescent: "10-17",
+    young_adult: "18-25",
+    adult: "26-40",
+    middle_age: "40-60",
+    senior: "60+",
+  };
+  return mapping[backendAgeGroup] || "26-40";
+};
+
+// Transform backend client to frontend Client type
+const transformBackendClient = (
+  backendClient: BackendClientData,
+  therapistId: string
+): Client => {
+  return {
+    id: backendClient.id,
+    therapistId: therapistId,
+    email: "", // Email not provided by backend
+    alias: backendClient.alias,
+    ageGroup: transformBackendAgeGroup(backendClient.age_group),
+    gender: backendClient.gender as Client["gender"],
+    riskLevel: backendClient.risk_level as Client["riskLevel"],
+    tags: backendClient.tags,
+    notes: backendClient.background_notes,
+    createdAt: new Date().toISOString(), // Backend doesn't provide timestamps
+    updatedAt: new Date().toISOString(),
+  };
+};
 
 export async function getClients(
   params: GetClientsParams
 ): Promise<GetClientsResponse> {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  // Make API call to backend
+  const response = await axios.get<BackendGetClientsResponse>(
+    "/therapist/all-clients"
+  );
 
-  // TODO: Replace with real API call when backend is ready
-  // const { data } = await axios.get<GetClientsResponse>(
-  //   `/api/therapists/${params.therapistId}/clients`,
-  //   {
-  //     params: {
-  //       page: params.page,
-  //       limit: params.limit,
-  //     },
-  //   }
-  // );
-  // return data;
+  // Transform backend data to frontend format
+  const clients = response.data.data.map((backendClient) =>
+    transformBackendClient(backendClient, params.therapistId)
+  );
 
+  // Backend doesn't support pagination yet, so we return all data
   return {
-    data: MOCK_CLIENTS,
-    total: MOCK_CLIENTS.length,
+    data: clients,
+    total: clients.length,
     page: params.page || 1,
-    limit: params.limit || 10,
+    limit: params.limit || clients.length,
   };
 }

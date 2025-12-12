@@ -62,7 +62,7 @@ export function CreateClientModal({
           </DialogTitle>
           <DialogDescription className="text-sm">
             Add a new pseudonymous profile. All fields are optional except for
-            the Email, Alias/Code and Age Group.
+            Alias/Code and Age Group.
           </DialogDescription>
         </DialogHeader>
         <ClientForm

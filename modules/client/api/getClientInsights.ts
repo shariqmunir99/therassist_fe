@@ -7,12 +7,13 @@ import { generateMockInsights } from "./mockInsightsData";
  *
  * Future implementation:
  * export async function getClientInsights(clientId: string): Promise<ClientInsightsData> {
- *   const response = await apiClient.get(`/clients/${clientId}/insights`);
- *   return response.data;
+ *   const { data } = await axios.get(`/api/clients/${clientId}/insights`);
+ *   return data;
  * }
  */
-export function getClientInsights(clientId: string): ClientInsightsData {
-  // Currently returning mock data
-  // In the future, this will be an async function making an API call
-  return generateMockInsights(clientId);
+export async function getClientInsights(
+  clientId: string
+): Promise<ClientInsightsData> {
+  // Mock async behavior
+  return Promise.resolve(generateMockInsights(clientId));
 }

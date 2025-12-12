@@ -1,43 +1,87 @@
-import { Client, ClientFormData } from "../models/Client";
+import axios from "@/lib/axios";
+import { Client, ClientFormData, AgeGroup } from "../models/Client";
 
 export interface CreateClientPayload extends ClientFormData {
   therapistId: string;
 }
 
-// In-memory storage for mock data
-let mockClientsStore: Client[] = [];
+// Backend payload structure
+interface BackendCreateClientPayload {
+  alias: string;
+  age_group: string;
+  gender?: string;
+  tags?: string[];
+  background_notes?: string;
+  risk_level?: string;
+}
+
+// Backend response structure
+interface BackendCreateClientResponse {
+  statusCode: number;
+  message: string;
+  error: string;
+  data: any; // Backend returns empty object for now
+}
+
+// Transform frontend age group to backend format
+const transformAgeGroup = (ageGroup: AgeGroup): string => {
+  const mapping: Record<AgeGroup, string> = {
+    "10-17": "adolescent",
+    "18-25": "young_adult",
+    "26-40": "adult",
+    "40-60": "middle_age",
+    "60+": "senior",
+  };
+  return mapping[ageGroup];
+};
+
+// Transform backend age group to frontend format
+const transformBackendAgeGroup = (backendAgeGroup: string): AgeGroup => {
+  const mapping: Record<string, AgeGroup> = {
+    adolescent: "10-17",
+    young_adult: "18-25",
+    adult: "26-40",
+    middle_age: "40-60",
+    senior: "60+",
+  };
+  return mapping[backendAgeGroup] || "26-40";
+};
 
 export async function createClient(
   payload: CreateClientPayload
 ): Promise<Client> {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  // Transform payload to backend format
+  const backendPayload: BackendCreateClientPayload = {
+    alias: payload.alias,
+    age_group: transformAgeGroup(payload.ageGroup),
+  };
 
-  // TODO: Replace with real API call when backend is ready
-  // const { data } = await axios.post<Client>("/api/clients", payload);
-  // return data;
-
-  // Check for duplicate alias (simulate backend validation)
-  const existingClient = mockClientsStore.find(
-    (c) =>
-      c.alias.toLowerCase() === payload.alias.toLowerCase() &&
-      c.therapistId === payload.therapistId
-  );
-
-  if (existingClient) {
-    throw {
-      response: {
-        status: 409,
-        data: { message: "A client with this alias already exists" },
-      },
-    };
+  // Add optional fields only if they exist
+  if (payload.gender) {
+    backendPayload.gender = payload.gender;
+  }
+  if (payload.tags && payload.tags.length > 0) {
+    backendPayload.tags = payload.tags;
+  }
+  if (payload.notes) {
+    backendPayload.background_notes = payload.notes;
+  }
+  if (payload.riskLevel) {
+    backendPayload.risk_level = payload.riskLevel;
   }
 
-  // Create new client
+  // Make API call to backend
+  const response = await axios.post<BackendCreateClientResponse>(
+    "/therapist/client-profile",
+    backendPayload
+  );
+
+  // Transform response back to frontend format
+  // Note: Backend returns empty data object, so we construct the client from our payload
   const newClient: Client = {
-    id: `client-${Date.now()}`,
+    id: response.data.data?.id || `temp-${Date.now()}`, // Use temp ID if backend doesn't return one
     therapistId: payload.therapistId,
-    email: payload.email,
+    email: payload.email || "",
     alias: payload.alias,
     ageGroup: payload.ageGroup,
     gender: payload.gender,
@@ -48,6 +92,5 @@ export async function createClient(
     updatedAt: new Date().toISOString(),
   };
 
-  mockClientsStore.push(newClient);
   return newClient;
 }

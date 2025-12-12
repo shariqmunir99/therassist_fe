@@ -48,7 +48,7 @@ export interface Client {
 }
 
 export interface ClientFormData {
-  email: string;
+  email?: string; // Temporarily optional - backend not accepting it yet
   alias: string;
   ageGroup: AgeGroup;
   gender?: Gender;
