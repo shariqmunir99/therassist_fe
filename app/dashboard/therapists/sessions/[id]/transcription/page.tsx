@@ -158,7 +158,9 @@ export default function TranscriptionPage() {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link href={`/dashboard/therapists/clients/${session?.clientId}`}>
+                <Link
+                  href={`/dashboard/therapists/clients/${session?.clientId}`}
+                >
                   {client?.alias}
                 </Link>
               </BreadcrumbLink>
