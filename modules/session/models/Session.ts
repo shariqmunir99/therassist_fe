@@ -3,13 +3,17 @@ export interface Session {
   clientId: string;
   therapistId: string;
   sessionDate: string;
-  duration: number;
-  status: 'scheduled' | 'completed' | 'cancelled' | 'no-show';
+  duration: string | number;
+  status: string;
+  session_number: number;
+  processing_state: string;
   notes?: string;
   audioUrl?: string;
-  hasTranscription: boolean;
-  createdAt: string;
-  updatedAt: string;
+  theme?: string;
+  theme_explanation?: string | null;
+  hasTranscription?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface SessionFormData {

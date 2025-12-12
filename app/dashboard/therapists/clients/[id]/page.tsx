@@ -1,7 +1,8 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useClient, ClientInsights, ClientStatsCards } from "@/modules/client";
 import { EditClientModal } from "@/modules/client/components/EditClientModal";
 import { UploadSessionModal } from "@/modules/session/components/UploadSessionModal";
@@ -11,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AGE_GROUPS } from "@/modules/client/models/Client";
 import { Upload, Pencil } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ClientDetailPageProps {
   params: Promise<{
@@ -20,6 +22,9 @@ interface ClientDetailPageProps {
 
 export default function ClientDetailPage({ params }: ClientDetailPageProps) {
   const { id } = use(params);
+  const router = useRouter();
+  const { getUserId } = useAuth();
+  const [therapistId, setTherapistId] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isUploadSessionModalOpen, setIsUploadSessionModalOpen] =
     useState(false);
@@ -27,6 +32,16 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
     "sessions"
   );
   const { data: client, isLoading, error } = useClient(id);
+
+  // Get therapist ID from auth
+  useEffect(() => {
+    const userId = getUserId();
+    if (!userId) {
+      router.push("/login");
+    } else {
+      setTherapistId(userId);
+    }
+  }, [getUserId, router]);
 
   // Fetch clients for the upload modal (just pass the current client)
   const { data: clientsResponse } = useClients({
@@ -232,8 +247,8 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
           </div>
 
           {/* Sessions Table - Loads independently */}
-          {activeTab === "sessions" && !isLoading && client && (
-            <ClientSessionsTable clientId={id} />
+          {activeTab === "sessions" && !isLoading && client && therapistId && (
+            <ClientSessionsTable clientId={id} therapistId={therapistId} />
           )}
 
           {/* Insights Tab - Loads independently */}

@@ -5,22 +5,45 @@ import { RefreshCw, FileUp } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSessions } from "../hooks/useSession";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useClientSessions } from "../hooks/useSession";
 
 interface ClientSessionsTableProps {
   clientId: string;
+  therapistId: string;
 }
 
-export function ClientSessionsTable({ clientId }: ClientSessionsTableProps) {
+// Utility function to parse HH:MM:SS or H:MM:SS duration to minutes
+function parseDuration(duration: string | number): number | null {
+  if (typeof duration === "number") return duration;
+
+  // Match both "00:10:09" and "0:10:09" formats
+  const match = duration.match(/^(\d{1,2}):(\d{2}):(\d{2})$/);
+  if (!match) return null;
+
+  const hours = parseInt(match[1], 10);
+  const minutes = parseInt(match[2], 10);
+  const seconds = parseInt(match[3], 10);
+
+  return Math.round(hours * 60 + minutes + seconds / 60);
+}
+
+export function ClientSessionsTable({
+  clientId,
+  therapistId,
+}: ClientSessionsTableProps) {
   const router = useRouter();
   const {
-    data: sessionsResponse,
+    data: sessions,
     isLoading,
     error,
     refetch,
-  } = useSessions({ clientId });
-
-  const sessions = sessionsResponse?.data || [];
+  } = useClientSessions(clientId, therapistId);
 
   // Show error toast when error occurs
   if (error && !isLoading) {
@@ -28,30 +51,32 @@ export function ClientSessionsTable({ clientId }: ClientSessionsTableProps) {
   }
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200";
-      case "scheduled":
+    const upperStatus = status?.toUpperCase();
+    switch (upperStatus) {
+      case "UPLOADED":
         return "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200";
-      case "cancelled":
-        return "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200";
-      case "no-show":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-200";
+      case "TRANSCRIBED":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200";
+      case "ANNOTATED":
+        return "bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-200";
+      case "COMPLETED":
+        return "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200";
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-200";
     }
   };
 
   const getStatusLabel = (status: string) => {
-    switch (status) {
-      case "completed":
+    const upperStatus = status?.toUpperCase();
+    switch (upperStatus) {
+      case "UPLOADED":
+        return "Uploaded";
+      case "TRANSCRIBED":
+        return "Transcribed";
+      case "ANNOTATED":
+        return "Annotated";
+      case "COMPLETED":
         return "Completed";
-      case "scheduled":
-        return "Scheduled";
-      case "cancelled":
-        return "Cancelled";
-      case "no-show":
-        return "No Show";
       default:
         return status;
     }
@@ -69,7 +94,7 @@ export function ClientSessionsTable({ clientId }: ClientSessionsTableProps) {
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
                 >
-                  Session ID
+                  Session
                 </th>
                 <th
                   scope="col"
@@ -144,7 +169,7 @@ export function ClientSessionsTable({ clientId }: ClientSessionsTableProps) {
   }
 
   // Empty state
-  if (sessions.length === 0) {
+  if (!sessions || sessions.length === 0) {
     return (
       <div className="mt-6">
         <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30 p-12 text-center">
@@ -162,83 +187,104 @@ export function ClientSessionsTable({ clientId }: ClientSessionsTableProps) {
 
   // Success state with data
   return (
-    <div className="mt-6">
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-50 dark:bg-gray-800/50">
-            <tr>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
-              >
-                Session ID
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
-              >
-                Date
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
-              >
-                Duration
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
-              >
-                Status
-              </th>
-              <th scope="col" className="relative px-6 py-3">
-                <span className="sr-only">Actions</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
-            {sessions.map((session) => (
-              <tr key={session.id}>
-                <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-[#111218] dark:text-white">
-                  {session.id}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                  {new Date(session.sessionDate).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                  {session.duration} min
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusColor(
-                      session.status
-                    )}`}
-                  >
-                    {getStatusLabel(session.status)}
-                  </span>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      router.push(
-                        `/dashboard/therapists/sessions/${session.id}`
-                      )
-                    }
-                  >
-                    View Details
-                  </Button>
-                </td>
+    <TooltipProvider>
+      <div className="mt-6">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-800/50">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                >
+                  Session
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                >
+                  Date
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                >
+                  Duration
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                >
+                  Status
+                </th>
+                <th scope="col" className="relative px-6 py-3">
+                  <span className="sr-only">Actions</span>
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
+              {sessions.map((session) => {
+                const durationInMinutes = parseDuration(session.duration);
+                return (
+                  <tr key={session.id}>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-[#111218] dark:text-white">
+                      SES-{session.session_number}
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                      {new Date(session.sessionDate).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        }
+                      )}
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                      {durationInMinutes !== null ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="cursor-help">
+                              {durationInMinutes} min
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{session.duration}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : (
+                        "N/A"
+                      )}
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm">
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusColor(
+                          session.status
+                        )}`}
+                      >
+                        {getStatusLabel(session.status)}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          router.push(
+                            `/dashboard/therapists/sessions/${session.id}`
+                          )
+                        }
+                      >
+                        View Details
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 }

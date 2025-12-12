@@ -14,6 +14,7 @@ import {
   getMockSessionInsights,
 } from "../api/getSessionInsights";
 import { updateSessionNotes } from "../api/updateSessionNotes";
+import { getSessionsByClient } from "../api/getSessionsByClient";
 
 export function useSessions(params: GetSessionsParams) {
   return useQuery({
@@ -27,6 +28,14 @@ export function useSession(id: string) {
     queryKey: ["session", id],
     queryFn: () => getSession(id),
     enabled: !!id,
+  });
+}
+
+export function useClientSessions(clientId: string, therapistId: string) {
+  return useQuery({
+    queryKey: ["client-sessions", clientId],
+    queryFn: () => getSessionsByClient(clientId, therapistId),
+    enabled: !!clientId && !!therapistId,
   });
 }
 
