@@ -50,7 +50,13 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
     limit: 100,
   });
 
+  // Ensure current client is always in the list for the modal
   const clients = clientsResponse?.data || [];
+  const clientsForModal = client
+    ? clients.some((c) => c.id === client.id)
+      ? clients
+      : [client, ...clients]
+    : clients;
 
   const ageGroupLabel = client
     ? AGE_GROUPS.find((g) => g.value === client.ageGroup)?.label ||
@@ -272,7 +278,7 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
         isOpen={isUploadSessionModalOpen}
         onClose={() => setIsUploadSessionModalOpen(false)}
         selectedClientId={id}
-        clients={clients}
+        clients={clientsForModal}
       />
     </main>
   );

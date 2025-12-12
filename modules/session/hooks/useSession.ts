@@ -6,6 +6,11 @@ import {
   UploadSessionOptions,
 } from "../api/uploadSession";
 import {
+  uploadAudioSession,
+  UploadAudioSessionPayload,
+  UploadAudioSessionOptions,
+} from "../api/uploadAudioSession";
+import {
   getTranscription,
   requestTranscription,
 } from "../api/getTranscription";
@@ -57,8 +62,8 @@ export function useUploadSession() {
     mutationFn: ({
       payload,
       ...options
-    }: { payload: UploadSessionPayload } & UploadSessionOptions) =>
-      uploadSession(payload, options),
+    }: { payload: UploadAudioSessionPayload } & UploadAudioSessionOptions) =>
+      uploadAudioSession(payload, options),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["sessions"] });
     },

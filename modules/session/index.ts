@@ -12,6 +12,7 @@ export { UploadSessionModal } from "./components/UploadSessionModal";
 export {
   useSessions,
   useSession,
+  useClientSessions,
   useSessionInsights,
   useUploadSession,
   useUpdateSessionNotes,

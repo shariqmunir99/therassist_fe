@@ -188,6 +188,7 @@ export function UploadSessionModal({
 
   // Handle upload
   const handleUpload = async () => {
+    console.log("Client Id: ", clientId);
     if (!selectedFile || !clientId || !hasConsent) return;
 
     setUploadState("uploading");
@@ -206,20 +207,9 @@ export function UploadSessionModal({
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     try {
-      // Get therapist ID from localStorage (set during login)
-      const therapistId = localStorage.getItem("user_id");
-
-      if (!therapistId) {
-        throw new Error("User ID not found. Please log in again.");
-      }
-
       await uploadMutation.mutateAsync({
         payload: {
           clientId,
-          therapistId,
-          sessionDate: sessionDate.toISOString().split("T")[0],
-          duration: fileValidation.duration || 0,
-          notes: notes || undefined,
           audioFile: selectedFile,
         },
         onUploadProgress: (progressEvent: AxiosProgressEvent) => {
@@ -493,8 +483,8 @@ export function UploadSessionModal({
             </div>
 
             <div className="space-y-4">
-              {/* Session Date */}
-              <label className="flex flex-col">
+              {/* Session Date - Hidden */}
+              <label className="hidden flex-col">
                 <p className="text-sm font-medium leading-normal pb-2 text-gray-700 dark:text-gray-300">
                   Session Date
                 </p>
@@ -538,7 +528,9 @@ export function UploadSessionModal({
                   disabled={!!selectedClientId || uploadState === "uploading"}
                 >
                   <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Search for a client" />
+                    <SelectValue placeholder="Select a client">
+                      {selectedClient?.alias || "Select a client"}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {clients.map((client) => (
@@ -550,8 +542,8 @@ export function UploadSessionModal({
                 </Select>
               </label>
 
-              {/* Session Notes */}
-              <label className="flex flex-col">
+              {/* Session Notes - Hidden */}
+              <label className="hidden flex-col">
                 <p className="text-sm font-medium leading-normal pb-2 text-gray-700 dark:text-gray-300">
                   Session Notes (Optional)
                 </p>
