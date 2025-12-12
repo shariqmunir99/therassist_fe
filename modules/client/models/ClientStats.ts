@@ -1,5 +1,5 @@
 export interface ClientStats {
-  totalSessions: number;
-  lastSessionDate: string | null;
-  pendingCount: number;
+  totalSessionCount: number;
+  processingCount: number;
+  lastUploadedSessionDate: string | null;
 }

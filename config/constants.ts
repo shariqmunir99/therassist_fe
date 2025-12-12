@@ -7,7 +7,7 @@ export const APP_CONFIG = {
 } as const;
 
 export const API_CONFIG = {
-  baseUrl: process.env.API_URL || "http://localhost:3001",
+  baseUrl: process.env.API_URL || "http://localhost:3001/api/",
   timeout: 30000, // 30 seconds
   retries: 3,
 } as const;

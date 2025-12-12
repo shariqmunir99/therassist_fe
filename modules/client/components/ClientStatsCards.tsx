@@ -63,7 +63,7 @@ export function ClientStatsCards({ clientId }: ClientStatsCardsProps) {
   }
 
   // Empty state (no sessions)
-  if (stats && stats.totalSessions === 0) {
+  if (stats && stats.totalSessionCount === 0) {
     return (
       <section className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         <Card className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30">
@@ -79,7 +79,7 @@ export function ClientStatsCards({ clientId }: ClientStatsCardsProps) {
         <Card className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30">
           <CardContent className="p-4">
             <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-              Last Session
+              Last Uploaded Session
             </p>
             <p className="text-lg font-medium text-gray-400 dark:text-gray-500">
               No sessions yet
@@ -109,24 +109,31 @@ export function ClientStatsCards({ clientId }: ClientStatsCardsProps) {
             Total Sessions
           </p>
           <p className="text-3xl font-bold text-[#111218] dark:text-white">
-            {stats?.totalSessions ?? 0}
+            {stats?.totalSessionCount ?? 0}
           </p>
         </CardContent>
       </Card>
       <Card className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30">
         <CardContent className="p-4">
           <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            Last Session
+            Last Uploaded Session
           </p>
-          <p className="text-3xl font-bold text-[#111218] dark:text-white">
-            {stats?.lastSessionDate
-              ? new Date(stats.lastSessionDate).toLocaleDateString("en-US", {
+          {stats?.lastUploadedSessionDate ? (
+            <p className="text-3xl font-bold text-[#111218] dark:text-white">
+              {new Date(stats.lastUploadedSessionDate).toLocaleDateString(
+                "en-US",
+                {
                   month: "short",
                   day: "numeric",
                   year: "numeric",
-                })
-              : "N/A"}
-          </p>
+                }
+              )}
+            </p>
+          ) : (
+            <p className="text-lg font-medium text-gray-400 dark:text-gray-500">
+              No sessions uploaded yet
+            </p>
+          )}
         </CardContent>
       </Card>
       <Card className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/30">
@@ -135,7 +142,7 @@ export function ClientStatsCards({ clientId }: ClientStatsCardsProps) {
             Processing Status
           </p>
           <p className="text-3xl font-bold text-[#111218] dark:text-white">
-            {stats?.pendingCount ?? 0} Pending
+            {stats?.processingCount ?? 0} Pending
           </p>
         </CardContent>
       </Card>

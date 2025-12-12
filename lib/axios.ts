@@ -1,7 +1,7 @@
 import axiosLib from "axios";
 
 const axios = axiosLib.create({
-  baseURL: process.env.API_URL || "http://localhost:3001",
+  baseURL: process.env.API_URL || "http://localhost:3001/api/",
   headers: {
     "Content-Type": "application/json",
   },

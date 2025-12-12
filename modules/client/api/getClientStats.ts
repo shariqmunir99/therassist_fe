@@ -1,20 +1,27 @@
+import axios from "@/lib/axios";
 import type { ClientStats } from "../models/ClientStats";
 
 /**
- * Fetches client statistics
- * TODO: Replace with actual API call when backend is ready
- *
- * Future implementation:
- * export async function getClientStats(clientId: string): Promise<ClientStats> {
- *   const { data } = await axios.get(`/api/clients/${clientId}/stats`);
- *   return data;
- * }
+ * Backend response structure for client stats
+ */
+interface BackendClientStatsResponse {
+  statusCode: number;
+  message: string;
+  error: string;
+  data: {
+    totalSessionCount: number;
+    processingCount: number;
+    lastUploadedSessionDate: string | null;
+  };
+}
+
+/**
+ * Fetches client statistics from the backend
+ * GET /therapist/client-stats/{clientId}
  */
 export async function getClientStats(clientId: string): Promise<ClientStats> {
-  // Mock data for development
-  return Promise.resolve({
-    totalSessions: 12,
-    lastSessionDate: "2023-10-26",
-    pendingCount: 2,
-  });
+  const response = await axios.get<BackendClientStatsResponse>(
+    `/therapist/client-stats/${clientId}`
+  );
+  return response.data.data;
 }
