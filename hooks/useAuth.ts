@@ -103,7 +103,7 @@ export const useAuth = () => {
           response.data.refresh_token,
           response.data.id
         );
-        router.push("/dashboard/therapists/clients");
+        router.push("/dashboard/therapists");
       }
     },
     onError: (error) => {

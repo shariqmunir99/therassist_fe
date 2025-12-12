@@ -13,6 +13,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AGE_GROUPS } from "@/modules/client/models/Client";
 import { Upload, Pencil } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 interface ClientDetailPageProps {
   params: Promise<{
@@ -100,17 +108,20 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
             <Skeleton className="h-5 w-48" />
           </div>
         ) : (
-          <div className="mb-6 flex flex-wrap items-center gap-2">
-            <Link
-              href="/dashboard/therapists/clients"
-              className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary"
-            >
-              Clients
-            </Link>
-            <span className="text-sm text-gray-400 dark:text-gray-500">/</span>
-            <span className="text-sm font-medium text-[#111218] dark:text-white">
-              {client?.alias}
-            </span>
+          <div className="mb-6">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link href="/dashboard/therapists/clients">Clients</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{client?.alias}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
         )}
 

@@ -22,6 +22,12 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from "@/components/ui/breadcrumb";
 
 export default function TherapistClientsPage() {
   const router = useRouter();
@@ -138,9 +144,18 @@ export default function TherapistClientsPage() {
   }
 
   return (
-    <div className="space-y-0">
+    <div className="space-y-6">
+      {/* Breadcrumb */}
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbPage>Clients</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
       {/* Header */}
-      <div className="flex flex-wrap justify-between items-center gap-4 p-4">
+      <div className="flex flex-wrap justify-between items-center gap-4">
         <h1 className="text-4xl font-black">Clients</h1>
         {therapistId && (
           <CreateClientModal
@@ -156,7 +171,7 @@ export default function TherapistClientsPage() {
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col sm:flex-row gap-3 p-4 border-b">
+      <div className="flex flex-col sm:flex-row gap-3 border-b pb-4">{" "}
         <div className="flex-grow">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
@@ -312,7 +327,7 @@ export default function TherapistClientsPage() {
 
       {/* Grid Content */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="bg-white rounded-xl border p-4 space-y-4">
               <Skeleton className="h-6 w-32" />
@@ -350,7 +365,7 @@ export default function TherapistClientsPage() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredClients.map((client) => {
             const ageGroupLabel =
               AGE_GROUPS.find((g) => g.value === client.ageGroup)?.label ||

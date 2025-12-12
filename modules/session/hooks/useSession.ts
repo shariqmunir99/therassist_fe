@@ -20,6 +20,11 @@ import {
 } from "../api/getSessionInsights";
 import { updateSessionNotes } from "../api/updateSessionNotes";
 import { getSessionsByClient } from "../api/getSessionsByClient";
+import {
+  getUtterances,
+  GetUtterancesPayload,
+  GetUtterancesResponse,
+} from "../api/getUtterances";
 
 export function useSessions(params: GetSessionsParams) {
   return useQuery({
@@ -100,5 +105,27 @@ export function useRequestTranscription() {
       queryClient.invalidateQueries({ queryKey: ["transcription", sessionId] });
       queryClient.invalidateQueries({ queryKey: ["session", sessionId] });
     },
+  });
+}
+
+/**
+ * Hook to fetch paginated utterances for a session
+ * Uses React Query's useQuery with infinite scroll pattern support
+ */
+export function useUtterances(
+  sessionId: string,
+  pageNo: number = 1,
+  pageSize: number = 20
+) {
+  return useQuery({
+    queryKey: ["utterances", sessionId, pageNo, pageSize],
+    queryFn: () =>
+      getUtterances({
+        session_id: sessionId,
+        page_no: pageNo,
+        page_size: pageSize,
+      }),
+    enabled: !!sessionId,
+    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
   });
 }

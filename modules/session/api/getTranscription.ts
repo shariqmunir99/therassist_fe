@@ -18,6 +18,7 @@ export interface TranscriptionSegment {
   speaker: "client" | "therapist";
   emotion?: string;
   audioUrl: string;
+  clinicalThemes?: Record<string, number>; // { "Theme Name": confidence_score }
 }
 
 export async function getTranscription(
