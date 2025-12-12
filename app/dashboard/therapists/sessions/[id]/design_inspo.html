@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Session Details Page</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body class="font-display bg-background-light">
+    <div class="relative flex min-h-screen w-full flex-col group/design-root"
+        style='font-family: Manrope, "Noto Sans", sans-serif;'>
+
+        <main class="flex h-full grow flex-col pt-20">
+            <div class="flex flex-1 justify-center py-8 px-4 sm:px-6 lg:px-8">
+                <div class="flex w-full max-w-7xl flex-col gap-8">
+                    <div class="flex flex-wrap items-start justify-between gap-4">
+                        <div class="flex flex-col gap-2">
+                            <p class="text-[#111318] text-4xl font-black leading-tight tracking-[-0.033em]">Session
+                                Details</p>
+                            <p class="text-[#616e89] text-base font-normal leading-normal">Review session summary,
+                                insights, and transcription.</p>
+                        </div>
+                        <button
+                            class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2">
+                            <span class="material-symbols-outlined">query_stats</span>
+                            <span class="truncate">Start Querying</span>
+                        </button>
+                    </div>
+                    <div
+                        class="border border-gray-200 bg-white rounded-lg shadow-sm p-6 flex flex-wrap items-center justify-between gap-6">
+                        <div class="flex flex-col gap-1.5">
+                            <p class="text-xs text-[#616e89] font-medium">PATIENT</p>
+                            <p class="text-base text-[#111318] font-semibold">Jane Doe</p>
+                        </div>
+                        <div class="w-px h-10 bg-gray-200 hidden md:block"></div>
+                        <div class="flex flex-col gap-1.5">
+                            <p class="text-xs text-[#616e89] font-medium">SESSION DATE</p>
+                            <p class="text-base text-[#111318] font-semibold">October 26, 2023</p>
+                        </div>
+                        <div class="w-px h-10 bg-gray-200 hidden md:block"></div>
+                        <div class="flex flex-col gap-1.5">
+                            <p class="text-xs text-[#616e89] font-medium">SESSION ID</p>
+                            <p class="text-base text-[#111318] font-semibold">#S8125-A34F</p>
+                        </div>
+                        <div class="w-px h-10 bg-gray-200 hidden md:block"></div>
+                        <div class="flex items-center gap-3">
+                            <p class="text-xs text-[#616e89] font-medium">STATUS</p>
+                            <div
+                                class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-blue-100 text-blue-800 px-3">
+                                <p class="text-sm font-medium leading-normal">Annotated</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex border-b border-[#dbdee6] gap-8">
+                            <a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary pb-[13px] pt-4"
+                                href="#">
+                                <p class="text-primary text-sm font-bold leading-normal tracking-[0.015em]">Insights</p>
+                            </a>
+                            <a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-[#616e89] pb-[13px] pt-4"
+                                href="#">
+                                <p class="text-[#616e89] text-sm font-bold leading-normal tracking-[0.015em]">
+                                    Transcription</p>
+                            </a>
+                        </div>
+                        <div class="py-8">
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <div class="lg:col-span-2 flex flex-col gap-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                            <h3 class="text-base font-bold text-[#111318]">Emotion Distribution</h3>
+                                            <p class="text-sm text-[#616e89] mb-4">Breakdown of detected emotions.</p>
+                                            <div class="w-full h-56 flex items-center justify-center"><canvas
+                                                    id="emotionChart"></canvas></div>
+                                        </div>
+                                        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                            <h3 class="text-base font-bold text-[#111318]">Speaking Time</h3>
+                                            <p class="text-sm text-[#616e89] mb-4">Proportion of the session.</p>
+                                            <div class="w-full h-56 flex items-center justify-center"><canvas
+                                                    id="speakingTimeChart"></canvas></div>
+                                        </div>
+                                        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                            <h3 class="text-base font-bold text-[#111318]">Utterance Count</h3>
+                                            <p class="text-sm text-[#616e89] mb-4">Patient vs. Therapist.</p>
+                                            <div class="w-full h-56 flex items-center justify-center"><canvas
+                                                    id="utteranceChart"></canvas></div>
+                                        </div>
+                                        <div
+                                            class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col items-center justify-center text-center">
+                                            <h3 class="text-base font-bold text-[#111318]">Sentiment Score</h3>
+                                            <p class="text-sm text-[#616e89] mb-2">Overall emotional tone.</p>
+                                            <p class="text-5xl font-bold text-yellow-600">0.3</p>
+                                            <p class="text-sm font-medium text-gray-500 mt-2">Slightly Negative</p>
+                                        </div>
+                                    </div>
+                                    <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                        <h3 class="text-base font-bold text-[#111318]">Session Theme</h3>
+                                        <p class="text-sm text-[#616e89] mb-4">Primary topic discussed during the
+                                            session.</p>
+                                        <div class="flex flex-wrap gap-2">
+                                            <span
+                                                class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1.5 rounded-full">Work-related
+                                                Anxiety</span>
+                                            <span
+                                                class="bg-gray-100 text-gray-800 text-sm font-medium px-3 py-1.5 rounded-full">Imposter
+                                                Syndrome</span>
+                                            <span
+                                                class="bg-gray-100 text-gray-800 text-sm font-medium px-3 py-1.5 rounded-full">Cognitive
+                                                Restructuring</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="lg:col-span-1 flex flex-col gap-6">
+                                    <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h3 class="text-lg font-bold text-[#111318]">Therapist Notes</h3>
+                                            <button class="text-primary text-sm font-bold hover:underline">Edit</button>
+                                        </div>
+                                        <p class="text-sm text-[#616e89] mb-4">Private notes and reflections for this
+                                            session.</p>
+                                        <div class="p-4 rounded-lg bg-background-light min-h-[150px]">
+                                            <p class="text-[#111318] text-sm/relaxed">Patient shows progress in
+                                                identifying negative thought patterns. Continue exploring cognitive
+                                                restructuring techniques. Follow up on manager relationship dynamics
+                                                next session. Consider introducing mindfulness exercises to manage
+                                                work-related anxiety.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctxUtterance = document.getElementById('utteranceChart');
+            if (ctxUtterance) {
+                new Chart(ctxUtterance, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Patient', 'Therapist'],
+                        datasets: [{
+                            label: 'Utterances',
+                            data: [84, 62],
+                            backgroundColor: ['#2463eb', '#a5b4fc'],
+                            borderRadius: 4,
+                            barPercentage: 0.5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            y: { grid: { display: false, drawBorder: false }, ticks: { padding: 10 } },
+                            x: { beginAtZero: true, grid: { drawBorder: false }, ticks: { padding: 10 } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+            const ctxSpeakingTime = document.getElementById('speakingTimeChart');
+            if (ctxSpeakingTime) {
+                new Chart(ctxSpeakingTime, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Patient (58%)', 'Therapist (42%)'],
+                        datasets: [{
+                            data: [58, 42],
+                            backgroundColor: ['#2463eb', '#a5b4fc'],
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, padding: 20 } } }
+                    }
+                });
+            }
+            const ctxEmotion = document.getElementById('emotionChart');
+            if (ctxEmotion) {
+                new Chart(ctxEmotion, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Anxious (45%)', 'Sad (25%)', 'Neutral (20%)', 'Hopeful (10%)'],
+                        datasets: [{
+                            data: [45, 25, 20, 10],
+                            backgroundColor: ['#60a5fa', '#93c5fd', '#bfdbfe', '#dbeafe'],
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, padding: 20 } } }
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>

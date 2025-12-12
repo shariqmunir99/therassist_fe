@@ -36,6 +36,8 @@ export interface Client {
   therapistId: string;
   email: string;
   alias: string; // Unique alias/code for the client
+  firstName?: string; // Optional first name for display
+  lastName?: string; // Optional last name for display
   ageGroup: AgeGroup;
   gender?: Gender;
   riskLevel?: RiskLevel;

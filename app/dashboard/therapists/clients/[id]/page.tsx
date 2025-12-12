@@ -1,29 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useClient, ClientInsights } from "@/modules/client";
 import { EditClientModal } from "@/modules/client/components/EditClientModal";
+import { UploadSessionModal } from "@/modules/session/components/UploadSessionModal";
+import { useClients } from "@/modules/client/hooks/useClients";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { AGE_GROUPS } from "@/modules/client/models/Client";
-import { Upload, MoreVertical } from "lucide-react";
+import { Upload, Pencil, MoreVertical } from "lucide-react";
 
 interface ClientDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function ClientDetailPage({ params }: ClientDetailPageProps) {
+  const { id } = use(params);
   const router = useRouter();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isUploadSessionModalOpen, setIsUploadSessionModalOpen] =
+    useState(false);
   const [activeTab, setActiveTab] = useState<"sessions" | "insights">(
     "sessions"
   );
-  const { data: client, isLoading, error } = useClient(params.id);
+  const { data: client, isLoading, error } = useClient(id);
+
+  // Fetch clients for the upload modal (just pass the current client)
+  const { data: clientsResponse } = useClients({
+    therapistId: client?.therapistId || "",
+    page: 1,
+    limit: 100,
+  });
+
+  const clients = clientsResponse?.data || [];
 
   const ageGroupLabel = client
     ? AGE_GROUPS.find((g) => g.value === client.ageGroup)?.label ||
@@ -137,14 +151,19 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
             </div>
             <div className="flex items-center gap-2">
               <Button
-                onClick={() => setIsEditModalOpen(true)}
+                onClick={() => setIsUploadSessionModalOpen(true)}
                 className="flex h-10 min-w-[84px] items-center justify-center gap-2"
               >
                 <Upload className="h-5 w-5" />
                 <span>Upload Session</span>
               </Button>
-              <Button variant="outline" size="icon" className="h-10 w-10">
-                <MoreVertical className="h-5 w-5" />
+              <Button
+                variant="outline"
+                onClick={() => setIsEditModalOpen(true)}
+                className="h-10 gap-2"
+              >
+                <Pencil className="h-4 w-4" />
+                <span>Edit Client</span>
               </Button>
             </div>
           </div>
@@ -296,9 +315,17 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
                           </span>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                          <button className="text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary">
-                            <MoreVertical className="h-5 w-5" />
-                          </button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              router.push(
+                                `/dashboard/therapists/sessions/${session.id}`
+                              )
+                            }
+                          >
+                            View Details
+                          </Button>
                         </td>
                       </tr>
                     ))}
@@ -309,7 +336,7 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
           )}
 
           {/* Insights Tab */}
-          {activeTab === "insights" && <ClientInsights clientId={params.id} />}
+          {activeTab === "insights" && <ClientInsights clientId={id} />}
         </section>
       </div>
 
@@ -318,6 +345,14 @@ export default function ClientDetailPage({ params }: ClientDetailPageProps) {
         client={client}
         open={isEditModalOpen}
         onOpenChange={setIsEditModalOpen}
+      />
+
+      {/* Upload Session Modal */}
+      <UploadSessionModal
+        isOpen={isUploadSessionModalOpen}
+        onClose={() => setIsUploadSessionModalOpen(false)}
+        selectedClientId={id}
+        clients={clients}
       />
     </main>
   );
