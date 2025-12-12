@@ -46,3 +46,4 @@ next-env.d.ts
 
 # Copilot instructions
 .github/instructions/Therassist_fe_instructions.instructions.md
+.vscode/settings.json
